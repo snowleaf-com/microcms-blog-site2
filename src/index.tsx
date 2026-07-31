@@ -19,8 +19,11 @@ const app = new Hono<AppEnv>();
 app.get('/api/health', (c) => {
   return c.json({
     ok: true,
-    service: 'hono-blog-app',
-    timestamp: new Date().toISOString()
+    service: 'snowleaf',
+    timestamp: new Date().toISOString(),
+    microcms: {
+      configured: hasMicroCmsConfig(c.env)
+    }
   });
 });
 
