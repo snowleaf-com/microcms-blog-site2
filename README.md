@@ -29,13 +29,23 @@ npm run dev
 
 ## デプロイ
 
-```bash
-# シークレット登録（初回）
-npx wrangler secret put MICROCMS_API_KEY
+`.dev.vars` に本番と同じ値を入れてから:
 
-# サービスドメインは wrangler.jsonc の vars、またはダッシュボードで設定
+```bash
 npm run deploy
 ```
+
+（内部で `wrangler deploy --secrets-file .dev.vars` を実行し、microCMS の Secret を同時に載せます）
+
+Secret だけ後から更新する場合:
+
+```bash
+npx wrangler secret bulk .dev.vars
+# または
+npx wrangler deploy --secrets-file .dev.vars
+```
+
+> `wrangler secret put` だけだと、名前は付くのに実行時は空、という状態になることがあります。このプロジェクトでは `--secrets-file` を使ってください。
 
 ## ページ構成
 
