@@ -1,8 +1,8 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "hono-blog-app",
+  "name": "snowleaf",
   "main": "src/index.tsx",
-  "compatibility_date": "2026-07-28",
+  "compatibility_date": "2025-07-28",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./public",
