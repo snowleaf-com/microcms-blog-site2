@@ -29,6 +29,19 @@ npm run dev
 
 ## デプロイ
 
+### 自動デプロイ（推奨）
+
+`main` への push / マージで GitHub Actions（`.github/workflows/deploy.yml`）が動き、Cloudflare Workers へ自動デプロイします。
+
+事前にリポジトリの Secrets へ次を設定してください。
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+※ microCMS の Secret（`MICROCMS_*`）は Workers 側に別途載せておく必要があります（下記の手動デプロイ、または `wrangler secret`）。
+
+### 手動デプロイ
+
 `.dev.vars` に本番と同じ値を入れてから:
 
 ```bash
