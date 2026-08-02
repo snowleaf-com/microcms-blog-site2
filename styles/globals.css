@@ -141,4 +141,76 @@
     font-size: 0.9em;
     line-height: 1.6;
   }
+
+  /* 画像読み込みスケルトン（シマー） */
+  @keyframes media-shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+
+  .media-frame {
+    position: relative;
+    overflow: hidden;
+    background: #e9ebe3;
+  }
+
+  .media-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      105deg,
+      #e4e6de 0%,
+      #e4e6de 38%,
+      #f3f5ed 50%,
+      #e4e6de 62%,
+      #e4e6de 100%
+    );
+    background-size: 220% 100%;
+    animation: media-shimmer 1.35s ease-in-out infinite;
+    transition: opacity 0.35s ease;
+  }
+
+  .media-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 30% 40%, rgb(32 143 79 / 0.08), transparent 45%),
+      radial-gradient(circle at 70% 60%, rgb(32 143 79 / 0.05), transparent 40%);
+  }
+
+  .media-frame img {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .media-frame img.is-loaded {
+    opacity: 1;
+  }
+
+  .media-frame.is-loaded::before,
+  .media-frame.is-loaded::after {
+    opacity: 0;
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .media-frame::before {
+      animation: none;
+    }
+
+    .media-frame img {
+      transition: none;
+    }
+  }
 }

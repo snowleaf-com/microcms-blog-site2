@@ -15,7 +15,7 @@ export function PostCard({ post }: PostCardProps) {
       {eyecatch ? (
         <a
           href={`/blog/${post.id}`}
-          class="block border-b border-[var(--color-line)]"
+          class="media-frame block h-[180px] border-b border-[var(--color-line)]"
         >
           <img
             src={microCmsImageUrl(eyecatch.url, { width: 640 })}
@@ -24,7 +24,7 @@ export function PostCard({ post }: PostCardProps) {
             width={eyecatch.width}
             height={eyecatch.height}
             alt={post.title}
-            class="block w-full h-[180px] object-cover"
+            class="block h-full w-full object-cover"
             loading="lazy"
             decoding="async"
           />
