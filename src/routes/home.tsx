@@ -42,10 +42,18 @@ export function HomePage({ posts, hasConfig }: HomePageProps) {
           rel="noopener noreferrer"
           class="group relative block overflow-hidden border border-[var(--color-line)] transition hover:border-[var(--color-accent)] sm:min-h-[140px]"
         >
-          <span
-            class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80 group-hover:opacity-90"
-            style={{ backgroundImage: 'url(/grass-bg.png)' }}
-          />
+          <picture>
+            <source srcset="/grass-bg.webp" type="image/webp" />
+            <img
+              src="/grass-bg.jpg"
+              alt=""
+              width={800}
+              height={531}
+              class="absolute inset-0 h-full w-full object-cover opacity-80 transition group-hover:opacity-90"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </picture>
           <span
             class="absolute inset-0"
             style={{ backgroundColor: 'rgba(20, 45, 28, 0.42)' }}

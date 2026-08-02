@@ -7,6 +7,7 @@ import {
   getTags,
   hasMicroCmsConfig
 } from './lib/microcms';
+import { microCmsImageUrl, microCmsSrcSet } from './lib/image';
 import { highlightCodeInHtml } from './lib/shiki';
 import { createTocAndHtml } from './lib/toc';
 import { BlogDetailPage } from './routes/blog';
@@ -42,7 +43,17 @@ app.get('/', pageCache, async (c) => {
   ]);
 
   return c.html(
-    <Layout tags={tags}>
+    <Layout
+      tags={tags}
+      preloads={[
+        {
+          href: '/grass-bg.webp',
+          as: 'image',
+          type: 'image/webp',
+          fetchPriority: 'high'
+        }
+      ]}
+    >
       <HomePage
         posts={posts.contents}
         hasConfig={hasMicroCmsConfig(env)}
@@ -70,6 +81,18 @@ app.get('/blog/:id', pageCache, async (c) => {
 
   const highlightedContent = await highlightCodeInHtml(article.content);
   const { toc, html } = createTocAndHtml(highlightedContent);
+  const eyecatchPreloads = article.eyecatch
+    ? [
+        {
+          href: microCmsImageUrl(article.eyecatch.url, { width: 960 }),
+          as: 'image' as const,
+          imageSrcSet: microCmsSrcSet(article.eyecatch.url, [640, 960, 1200]),
+          imageSizes:
+            '(max-width: 920px) 100vw, min(780px, calc(100vw - 352px))',
+          fetchPriority: 'high' as const
+        }
+      ]
+    : [];
 
   return c.html(
     <Layout
@@ -77,6 +100,7 @@ app.get('/blog/:id', pageCache, async (c) => {
       description={article.excerpt ?? 'SnowLeaf 趣味ブログです。'}
       tags={tags}
       scripts={['/toc.js']}
+      preloads={eyecatchPreloads}
     >
       <BlogDetailPage article={article} html={html} toc={toc} />
     </Layout>
