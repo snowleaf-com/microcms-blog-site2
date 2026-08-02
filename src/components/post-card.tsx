@@ -1,4 +1,5 @@
 import { formatDate } from '../lib/date';
+import { microCmsImageUrl, microCmsSrcSet } from '../lib/image';
 import type { Blog } from '../types';
 import { TagCard } from './tag-card';
 
@@ -7,20 +8,25 @@ type PostCardProps = {
 };
 
 export function PostCard({ post }: PostCardProps) {
+  const eyecatch = post.eyecatch;
+
   return (
     <article class="border border-[var(--color-line)] bg-[var(--color-paper)] overflow-hidden grid align-content-start">
-      {post.eyecatch ? (
+      {eyecatch ? (
         <a
           href={`/blog/${post.id}`}
           class="block border-b border-[var(--color-line)]"
         >
           <img
-            src={post.eyecatch.url}
-            width={post.eyecatch.width}
-            height={post.eyecatch.height}
+            src={microCmsImageUrl(eyecatch.url, { width: 640 })}
+            srcset={microCmsSrcSet(eyecatch.url, [320, 480, 640])}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+            width={eyecatch.width}
+            height={eyecatch.height}
             alt={post.title}
             class="block w-full h-[180px] object-cover"
             loading="lazy"
+            decoding="async"
           />
         </a>
       ) : null}

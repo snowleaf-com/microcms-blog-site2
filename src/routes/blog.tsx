@@ -1,6 +1,7 @@
 import { ArticleToc } from '../components/article-toc';
 import { TagCard } from '../components/tag-card';
 import { formatDate } from '../lib/date';
+import { microCmsImageUrl, microCmsSrcSet } from '../lib/image';
 import type { Blog, TocItem } from '../types';
 
 type BlogDetailPageProps = {
@@ -9,19 +10,34 @@ type BlogDetailPageProps = {
   toc: TocItem[];
 };
 
+const EYECATCH_SIZES =
+  '(max-width: 920px) 100vw, min(780px, calc(100vw - 352px))';
+
 export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
+  const eyecatch = article.eyecatch;
+  const eyecatchSrc = eyecatch
+    ? microCmsImageUrl(eyecatch.url, { width: 1200 })
+    : undefined;
+  const eyecatchSrcSet = eyecatch
+    ? microCmsSrcSet(eyecatch.url, [640, 960, 1200])
+    : undefined;
+
   return (
     <main class="w-[min(1100px,calc(100%-32px))] mx-auto py-3 pb-16">
       <div class="article-layout grid grid-cols-1 gap-6 min-[921px]:grid-cols-[1fr_320px] content-start">
         <article class="article border border-[var(--color-line)] bg-[var(--color-paper)] overflow-hidden">
-          {article.eyecatch ? (
+          {eyecatch && eyecatchSrc ? (
             <figure class="w-full aspect-[1200/630] relative bg-[var(--color-muted)] m-0">
               <img
-                src={article.eyecatch.url}
-                width={article.eyecatch.width}
-                height={article.eyecatch.height}
+                src={eyecatchSrc}
+                srcset={eyecatchSrcSet}
+                sizes={EYECATCH_SIZES}
+                width={eyecatch.width}
+                height={eyecatch.height}
                 alt={article.title}
                 class="object-cover w-full h-full"
+                fetchpriority="high"
+                decoding="async"
               />
             </figure>
           ) : null}

@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { cache } from 'hono/cache';
 import { Layout } from './components/layout';
 import {
   getBlogDetail,
@@ -6,6 +7,7 @@ import {
   getTags,
   hasMicroCmsConfig
 } from './lib/microcms';
+import { microCmsImageUrl, microCmsSrcSet } from './lib/image';
 import { highlightCodeInHtml } from './lib/shiki';
 import { createTocAndHtml } from './lib/toc';
 import { BlogDetailPage } from './routes/blog';
@@ -15,6 +17,12 @@ import { TagPage } from './routes/tag';
 import type { AppEnv } from './types';
 
 const app = new Hono<AppEnv>();
+
+/** 旧 Next.js の revalidate = 300 相当 */
+const pageCache = cache({
+  cacheName: 'snowleaf-pages-v1',
+  cacheControl: 'public, max-age=300'
+});
 
 app.get('/api/health', (c) => {
   return c.json({
@@ -27,7 +35,7 @@ app.get('/api/health', (c) => {
   });
 });
 
-app.get('/', async (c) => {
+app.get('/', pageCache, async (c) => {
   const env = c.env;
   const [posts, tags] = await Promise.all([
     getBlogs(env, { limit: 12 }),
@@ -35,7 +43,17 @@ app.get('/', async (c) => {
   ]);
 
   return c.html(
-    <Layout tags={tags}>
+    <Layout
+      tags={tags}
+      preloads={[
+        {
+          href: '/grass-bg.webp',
+          as: 'image',
+          type: 'image/webp',
+          fetchPriority: 'high'
+        }
+      ]}
+    >
       <HomePage
         posts={posts.contents}
         hasConfig={hasMicroCmsConfig(env)}
@@ -44,7 +62,7 @@ app.get('/', async (c) => {
   );
 });
 
-app.get('/blog/:id', async (c) => {
+app.get('/blog/:id', pageCache, async (c) => {
   const id = c.req.param('id');
   const env = c.env;
   const [article, tags] = await Promise.all([
@@ -63,6 +81,18 @@ app.get('/blog/:id', async (c) => {
 
   const highlightedContent = await highlightCodeInHtml(article.content);
   const { toc, html } = createTocAndHtml(highlightedContent);
+  const eyecatchPreloads = article.eyecatch
+    ? [
+        {
+          href: microCmsImageUrl(article.eyecatch.url, { width: 960 }),
+          as: 'image' as const,
+          imageSrcSet: microCmsSrcSet(article.eyecatch.url, [640, 960, 1200]),
+          imageSizes:
+            '(max-width: 920px) 100vw, min(780px, calc(100vw - 352px))',
+          fetchPriority: 'high' as const
+        }
+      ]
+    : [];
 
   return c.html(
     <Layout
@@ -70,13 +100,14 @@ app.get('/blog/:id', async (c) => {
       description={article.excerpt ?? 'SnowLeaf 趣味ブログです。'}
       tags={tags}
       scripts={['/toc.js']}
+      preloads={eyecatchPreloads}
     >
       <BlogDetailPage article={article} html={html} toc={toc} />
     </Layout>
   );
 });
 
-app.get('/tag/:id', async (c) => {
+app.get('/tag/:id', pageCache, async (c) => {
   const id = c.req.param('id');
   const env = c.env;
   const [posts, tags] = await Promise.all([
