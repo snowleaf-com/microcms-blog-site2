@@ -43,12 +43,16 @@ export function HomePage({ posts, hasConfig }: HomePageProps) {
           class="group relative block overflow-hidden border border-[var(--color-line)] transition hover:border-[var(--color-accent)] sm:min-h-[140px]"
         >
           <picture>
-            <source srcset="/grass-bg.webp" type="image/webp" />
+            <source
+              type="image/webp"
+              srcset="/grass-bg-640.webp 640w, /grass-bg.webp 1024w"
+              sizes="(max-width: 1100px) calc(100vw - 32px), 1100px"
+            />
             <img
               src="/grass-bg.jpg"
               alt=""
-              width={800}
-              height={531}
+              width={1024}
+              height={680}
               class="absolute inset-0 h-full w-full object-cover opacity-80 transition group-hover:opacity-90"
               fetchpriority="high"
               decoding="async"

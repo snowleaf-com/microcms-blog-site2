@@ -50,6 +50,8 @@ app.get('/', pageCache, async (c) => {
           href: '/grass-bg.webp',
           as: 'image',
           type: 'image/webp',
+          imageSrcSet: '/grass-bg-640.webp 640w, /grass-bg.webp 1024w',
+          imageSizes: '(max-width: 1100px) calc(100vw - 32px), 1100px',
           fetchPriority: 'high'
         }
       ]}
