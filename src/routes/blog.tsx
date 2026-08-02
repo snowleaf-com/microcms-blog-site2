@@ -27,7 +27,7 @@ export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
       <div class="article-layout grid grid-cols-1 gap-6 min-[921px]:grid-cols-[1fr_320px] content-start">
         <article class="article border border-[var(--color-line)] bg-[var(--color-paper)] overflow-hidden">
           {eyecatch && eyecatchSrc ? (
-            <figure class="w-full aspect-[1200/630] relative bg-[var(--color-muted)] m-0">
+            <figure class="media-frame m-0 aspect-[1200/630] w-full">
               <img
                 src={eyecatchSrc}
                 srcset={eyecatchSrcSet}
@@ -35,7 +35,7 @@ export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
                 width={eyecatch.width}
                 height={eyecatch.height}
                 alt={article.title}
-                class="object-cover w-full h-full"
+                class="h-full w-full object-cover"
                 fetchpriority="high"
                 decoding="async"
               />

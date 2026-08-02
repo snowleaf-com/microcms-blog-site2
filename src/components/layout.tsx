@@ -30,6 +30,8 @@ export function Layout({
   scripts = [],
   preloads = []
 }: LayoutProps) {
+  const pageScripts = ['/media.js', ...scripts];
+
   return (
     <>
       {html`<!DOCTYPE html>`}
@@ -65,16 +67,25 @@ export function Layout({
               as="style"
               onload="this.onload=null;this.rel='stylesheet'"
             />
-            <noscript
-              ><link rel="stylesheet" href="/fonts.css"
-            /></noscript>
+            <noscript>
+              <link rel="stylesheet" href="/fonts.css" />
+              <style>
+                .media-frame img {
+                  opacity: 1 !important;
+                }
+                .media-frame::before,
+                .media-frame::after {
+                  display: none !important;
+                }
+              </style>
+            </noscript>
           `}
         </head>
         <body class="font-sans antialiased">
           <Header />
           {children}
           <Footer tags={tags} />
-          {scripts.map((src) => (
+          {pageScripts.map((src) => (
             <script key={src} src={src} defer />
           ))}
         </body>
