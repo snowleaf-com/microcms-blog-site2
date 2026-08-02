@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { cache } from 'hono/cache';
 import { Layout } from './components/layout';
 import {
   getBlogDetail,
@@ -16,6 +17,12 @@ import type { AppEnv } from './types';
 
 const app = new Hono<AppEnv>();
 
+/** 旧 Next.js の revalidate = 300 相当 */
+const pageCache = cache({
+  cacheName: 'snowleaf-pages-v1',
+  cacheControl: 'public, max-age=300'
+});
+
 app.get('/api/health', (c) => {
   return c.json({
     ok: true,
@@ -27,7 +34,7 @@ app.get('/api/health', (c) => {
   });
 });
 
-app.get('/', async (c) => {
+app.get('/', pageCache, async (c) => {
   const env = c.env;
   const [posts, tags] = await Promise.all([
     getBlogs(env, { limit: 12 }),
@@ -44,7 +51,7 @@ app.get('/', async (c) => {
   );
 });
 
-app.get('/blog/:id', async (c) => {
+app.get('/blog/:id', pageCache, async (c) => {
   const id = c.req.param('id');
   const env = c.env;
   const [article, tags] = await Promise.all([
@@ -76,7 +83,7 @@ app.get('/blog/:id', async (c) => {
   );
 });
 
-app.get('/tag/:id', async (c) => {
+app.get('/tag/:id', pageCache, async (c) => {
   const id = c.req.param('id');
   const env = c.env;
   const [posts, tags] = await Promise.all([
