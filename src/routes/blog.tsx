@@ -2,7 +2,10 @@ import {
   ArticleTocAccordion,
   ArticleTocSidebar
 } from '../components/article-toc';
+import { CommentForm } from '../components/comment-form';
+import { CommentList } from '../components/comment-list';
 import { TagCard } from '../components/tag-card';
+import type { Comment } from '../lib/comment';
 import { formatDate } from '../lib/date';
 import { microCmsImageUrl, microCmsSrcSet } from '../lib/image';
 import type { Blog, TocItem } from '../types';
@@ -11,12 +14,26 @@ type BlogDetailPageProps = {
   article: Blog;
   html: string;
   toc: TocItem[];
+  comments: Comment[];
+  commentAuthor?: string;
+  turnstileSiteKey?: string;
+  commentError?: string;
+  commentSuccess?: string;
 };
 
 const EYECATCH_SIZES =
   '(max-width: 920px) 100vw, min(780px, calc(100vw - 352px))';
 
-export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
+export function BlogDetailPage({
+  article,
+  html,
+  toc,
+  comments,
+  commentAuthor = '',
+  turnstileSiteKey = '',
+  commentError,
+  commentSuccess
+}: BlogDetailPageProps) {
   const eyecatch = article.eyecatch;
   const eyecatchSrc = eyecatch
     ? microCmsImageUrl(eyecatch.url, { width: 1200 })
@@ -78,6 +95,19 @@ export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
               class="article-content"
               dangerouslySetInnerHTML={{ __html: html }}
             />
+
+            <div class="article-comments">
+              {commentSuccess ? (
+                <p class="comment-success">{commentSuccess}</p>
+              ) : null}
+              <CommentList comments={comments} />
+              <CommentForm
+                blogId={article.id}
+                author={commentAuthor}
+                siteKey={turnstileSiteKey}
+                error={commentError}
+              />
+            </div>
           </div>
         </article>
 

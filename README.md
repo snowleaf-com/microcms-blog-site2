@@ -40,6 +40,18 @@ npm run dev
 
 ※ microCMS の Secret（`MICROCMS_*`）は Workers 側に別途載せておく必要があります（下記の手動デプロイ、または `wrangler secret`）。
 
+コメント機能用（任意）:
+
+- `TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`（Cloudflare Turnstile）
+- D1 データベース `snowleaf-db`（`wrangler.jsonc` の `d1_databases`）
+
+初回またはスキーマ更新時:
+
+```bash
+npx wrangler d1 migrations apply snowleaf-db --local   # ローカル
+npx wrangler d1 migrations apply snowleaf-db --remote  # 本番
+```
+
 ### 手動デプロイ
 
 `.dev.vars` に本番と同じ値を入れてから:

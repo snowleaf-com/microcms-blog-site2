@@ -7,5 +7,13 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "snowleaf-db",
+      "database_id": "c4074588-0e53-48cd-abea-e36f573387cf",
+      "migrations_dir": "migrations"
+    }
+  ]
 }

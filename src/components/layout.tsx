@@ -79,9 +79,13 @@ export function Layout({
           <Header />
           {children}
           <Footer tags={tags} />
-          {pageScripts.map((src) => (
-            <script key={src} src={src} defer />
-          ))}
+          {pageScripts.map((src) =>
+            src.includes('challenges.cloudflare.com') ? (
+              <script key={src} src={src} async defer />
+            ) : (
+              <script key={src} src={src} defer />
+            )
+          )}
         </body>
       </html>
     </>

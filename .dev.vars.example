@@ -1,2 +1,5 @@
 MICROCMS_SERVICE_DOMAIN=your-service-domain
 MICROCMS_API_KEY=your-api-key
+# Cloudflare Turnstile（コメント投稿用。未設定時はローカルのみ検証スキップ）
+TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=

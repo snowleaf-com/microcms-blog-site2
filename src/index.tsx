@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { cache } from 'hono/cache';
+import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 import { Layout } from './components/layout';
 import {
   getBlogDetail,
@@ -7,9 +8,11 @@ import {
   getTags,
   hasMicroCmsConfig
 } from './lib/microcms';
+import { createComment, getCommentsByBlogId } from './lib/comment';
 import { microCmsImageUrl, microCmsSrcSet } from './lib/image';
 import { highlightCodeInHtml } from './lib/shiki';
 import { createTocAndHtml } from './lib/toc';
+import { verifyTurnstile } from './lib/turnstile';
 import { BlogDetailPage } from './routes/blog';
 import { HomePage } from './routes/home';
 import { NotFoundPage } from './routes/not-found';
@@ -18,11 +21,27 @@ import type { AppEnv } from './types';
 
 const app = new Hono<AppEnv>();
 
-/** 旧 Next.js の revalidate = 300 相当 */
+const AUTHOR_COOKIE = 'snowleaf-comment-author';
+const SUCCESS_COOKIE = 'snowleaf-comment-success';
+
+/** 旧 Next.js の revalidate = 300 相当（記事詳細はコメントのためキャッシュしない） */
 const pageCache = cache({
   cacheName: 'snowleaf-pages-v1',
   cacheControl: 'public, max-age=300'
 });
+
+function commentErrorMessage(code?: string) {
+  if (code === 'turnstile') {
+    return '認証に失敗しました。もう一度お試しください。';
+  }
+  if (code === 'validation') {
+    return '名前とコメントを正しく入力してください。';
+  }
+  if (code === 'unavailable') {
+    return 'コメント機能の準備中です。しばらくしてからお試しください。';
+  }
+  return '';
+}
 
 app.get('/api/health', (c) => {
   return c.json({
@@ -64,7 +83,53 @@ app.get('/', pageCache, async (c) => {
   );
 });
 
-app.get('/blog/:id', pageCache, async (c) => {
+app.post('/blog/:id', async (c) => {
+  const id = c.req.param('id');
+  const formData = await c.req.formData();
+  const author = String(formData.get('author') ?? '').trim();
+  const content = String(formData.get('content') ?? '').trim();
+  const turnstileToken = String(
+    formData.get('cf-turnstile-response') ?? ''
+  ).trim();
+
+  if (!c.env.DB) {
+    return c.redirect(`/blog/${id}?error=unavailable`, 303);
+  }
+
+  const secret = c.env.TURNSTILE_SECRET_KEY ?? '';
+  const siteKey = c.env.TURNSTILE_SITE_KEY ?? '';
+  if (siteKey || secret) {
+    const ok = await verifyTurnstile(turnstileToken, secret);
+    if (!ok) {
+      return c.redirect(`/blog/${id}?error=turnstile`, 303);
+    }
+  }
+
+  if (!author || !content || author.length > 50 || content.length > 1000) {
+    return c.redirect(`/blog/${id}?error=validation`, 303);
+  }
+
+  await createComment(c.env.DB, { blogId: id, author, content });
+
+  setCookie(c, AUTHOR_COOKIE, author, {
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Lax'
+  });
+  setCookie(c, SUCCESS_COOKIE, 'コメントを投稿しました', {
+    path: '/',
+    maxAge: 10,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Lax'
+  });
+
+  return c.redirect(`/blog/${id}`, 303);
+});
+
+app.get('/blog/:id', async (c) => {
   const id = c.req.param('id');
   const env = c.env;
   const [article, tags] = await Promise.all([
@@ -83,6 +148,18 @@ app.get('/blog/:id', pageCache, async (c) => {
 
   const highlightedContent = await highlightCodeInHtml(article.content);
   const { toc, html } = createTocAndHtml(highlightedContent);
+  const comments = env.DB
+    ? await getCommentsByBlogId(env.DB, id)
+    : [];
+
+  const successMessage = getCookie(c, SUCCESS_COOKIE);
+  if (successMessage) {
+    deleteCookie(c, SUCCESS_COOKIE, { path: '/' });
+  }
+
+  // 共有エッジで他人の名前が漏れないよう、名前のサーバー差し込みはしない
+  const commentAuthor = '';
+
   const eyecatchPreloads = article.eyecatch
     ? [
         {
@@ -96,15 +173,29 @@ app.get('/blog/:id', pageCache, async (c) => {
       ]
     : [];
 
+  const turnstileSiteKey = env.TURNSTILE_SITE_KEY ?? '';
+  const scripts = turnstileSiteKey
+    ? ['/toc.js', 'https://challenges.cloudflare.com/turnstile/v0/api.js']
+    : ['/toc.js'];
+
   return c.html(
     <Layout
       title={`${article.title} | SnowLeaf`}
       description={article.excerpt ?? 'SnowLeaf 趣味ブログです。'}
       tags={tags}
-      scripts={['/toc.js']}
+      scripts={scripts}
       preloads={eyecatchPreloads}
     >
-      <BlogDetailPage article={article} html={html} toc={toc} />
+      <BlogDetailPage
+        article={article}
+        html={html}
+        toc={toc}
+        comments={comments}
+        commentAuthor={commentAuthor}
+        turnstileSiteKey={turnstileSiteKey}
+        commentError={commentErrorMessage(c.req.query('error'))}
+        commentSuccess={successMessage}
+      />
     </Layout>
   );
 });
