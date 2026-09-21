@@ -7,7 +7,7 @@ export function TagCard({ name, href }: TagCardProps) {
   return (
     <a
       href={href}
-      class="inline-flex items-center justify-center border border-[var(--color-line)] px-3.5 py-1.5 text-sm font-medium text-[var(--color-text)] bg-[var(--color-paper)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] rounded-none"
+      class="inline-flex items-center justify-center px-3.5 py-2.5 text-sm tracking-wide leading-none transition-colors rounded-none border border-[#e9e9e9] text-(--color-text) bg-(--color-paper) hover:border-(--color-accent) hover:text-(--color-accent)"
     >
       {name}
     </a>

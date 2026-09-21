@@ -1,4 +1,7 @@
-import { ArticleToc } from '../components/article-toc';
+import {
+  ArticleTocAccordion,
+  ArticleTocSidebar
+} from '../components/article-toc';
 import { TagCard } from '../components/tag-card';
 import { formatDate } from '../lib/date';
 import { microCmsImageUrl, microCmsSrcSet } from '../lib/image';
@@ -23,9 +26,9 @@ export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
     : undefined;
 
   return (
-    <main class="w-[min(1100px,calc(100%-32px))] mx-auto py-3 pb-16">
+    <main class="l-main py-3 pb-8">
       <div class="article-layout grid grid-cols-1 gap-6 min-[921px]:grid-cols-[1fr_320px] content-start">
-        <article class="article border border-[var(--color-line)] bg-[var(--color-paper)] overflow-hidden">
+        <article class="article bg-(--color-paper) overflow-hidden">
           {eyecatch && eyecatchSrc ? (
             <figure class="media-frame m-0 aspect-[1200/630] w-full">
               <img
@@ -42,16 +45,14 @@ export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
             </figure>
           ) : null}
 
-          <div class="article-inner px-4 py-6 md:px-8 md:py-10">
+          <div class="article-inner">
             <header class="article-header">
-              <time class="article-pub-date block text-sm text-[var(--color-muted)]">
+              <time class="article-pub-date block">
                 {formatDate(article.publishedAt)}
               </time>
-              <h1 class="article-title mt-2 mb-4 font-bold text-[clamp(1.35rem,6vw,1.75rem)] leading-tight min-[761px]:text-[clamp(1.5rem,3.5vw,2.25rem)]">
-                {article.title}
-              </h1>
-              <div class="flex flex-wrap items-center justify-between gap-3">
-                <span class="text-[var(--color-muted)]">
+              <h1 class="article-title">{article.title}</h1>
+              <div class="article-header__meta">
+                <span class="text-(--color-muted)">
                   {article.author?.name ?? 'SnowLeaf管理者'}
                 </span>
                 {article.tags && article.tags.length > 0 ? (
@@ -69,14 +70,18 @@ export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
               </div>
             </header>
 
+            <hr class="article-divider" />
+
+            <ArticleTocAccordion toc={toc} />
+
             <section
-              class="article-content mt-8 leading-[1.9]"
+              class="article-content"
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </div>
         </article>
 
-        <ArticleToc toc={toc} />
+        <ArticleTocSidebar toc={toc} />
       </div>
     </main>
   );
