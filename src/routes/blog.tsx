@@ -108,7 +108,12 @@ export function BlogDetailPage({
                 error={commentError}
               />
               {commentSuccess || commentError ? (
-                <script>{`document.getElementById('comments')?.scrollIntoView({behavior:'smooth',block:'start'})`}</script>
+                <script
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      "document.getElementById('comments')?.scrollIntoView({behavior:'smooth',block:'start'})"
+                  }}
+                />
               ) : null}
             </div>
           </div>
