@@ -7,7 +7,7 @@ concurrency:
   group: deploy-production
   cancel-in-progress: false
 jobs:
-  deploy:
+    10|  deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -34,14 +34,3 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
-          # GitHub Secrets → Workers Secrets に一括反映
-          secrets: |
-            MICROCMS_SERVICE_DOMAIN
-            MICROCMS_API_KEY
-            TURNSTILE_SITE_KEY
-            TURNSTILE_SECRET_KEY
-        env:
-          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
-          TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
-          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
