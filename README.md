@@ -38,7 +38,14 @@ npm run dev
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-※ microCMS の Secret（`MICROCMS_*`）は Workers 側に別途載せておく必要があります（下記の手動デプロイ、または `wrangler secret`）。
+アプリ用 Secret（microCMS / Turnstile）は Workers 側へ `wrangler secret put` で載せてください（下記）。
+
+D1 データベース `snowleaf-db` は `wrangler.jsonc` の `d1_databases` で紐づいています。
+
+```bash
+npx wrangler d1 migrations apply snowleaf-db --local   # ローカル
+npx wrangler d1 migrations apply snowleaf-db --remote  # 本番
+```
 
 ### 手動デプロイ
 
@@ -48,17 +55,22 @@ npm run dev
 npm run deploy
 ```
 
-（内部で `wrangler deploy --secrets-file .dev.vars` を実行し、microCMS の Secret を同時に載せます）
+（内部で `wrangler deploy --secrets-file .dev.vars` を実行し、Secret を同時に載せます）
 
 Secret だけ後から更新する場合:
 
 ```bash
-npx wrangler secret bulk .dev.vars
-# または
-npx wrangler deploy --secrets-file .dev.vars
+npx wrangler secret put MICROCMS_SERVICE_DOMAIN
+npx wrangler secret put MICROCMS_API_KEY
+npx wrangler secret put TURNSTILE_SITE_KEY
+npx wrangler secret put TURNSTILE_SECRET_KEY
 ```
 
-> `wrangler secret put` だけだと、名前は付くのに実行時は空、という状態になることがあります。このプロジェクトでは `--secrets-file` を使ってください。
+またはまとめて:
+
+```bash
+npx wrangler secret bulk .dev.vars
+```
 
 ## ページ構成
 

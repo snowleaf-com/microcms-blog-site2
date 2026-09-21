@@ -43,8 +43,11 @@ export type TocItem = {
 
 export type Bindings = {
   ASSETS: Fetcher;
+  DB: D1Database;
   MICROCMS_SERVICE_DOMAIN: string;
   MICROCMS_API_KEY: string;
+  TURNSTILE_SITE_KEY?: string;
+  TURNSTILE_SECRET_KEY?: string;
 };
 
 export type AppEnv = {

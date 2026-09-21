@@ -569,6 +569,126 @@
     color: var(--color-accent);
   }
 
+  /* コメント */
+  .article-comments {
+    margin: 2.5rem 2rem 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+    scroll-margin-top: 1.5rem;
+  }
+
+  @media screen and (max-width: 640px) {
+    .article-comments {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
+
+  .comment-heading {
+    margin: 0 0 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .comment-items {
+    margin: 0 0 2rem;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .comment-item {
+    padding: 1rem 1.1rem;
+    background: #f7faf8;
+    border: 1px solid var(--color-line);
+  }
+
+  .comment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.85rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .comment-author {
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .comment-date {
+    color: var(--color-muted);
+  }
+
+  .comment-body {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.8;
+    color: var(--color-text);
+  }
+
+  .comment-form__fields {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .comment-field label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .comment-field input,
+  .comment-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    font: inherit;
+    color: var(--color-text);
+  }
+
+  .comment-field input:focus,
+  .comment-field textarea:focus {
+    outline: 2px solid rgb(32 143 79 / 0.35);
+    outline-offset: 1px;
+  }
+
+  .comment-submit {
+    justify-self: start;
+    padding: 0.65rem 1.25rem;
+    border: 0;
+    background: var(--color-accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .comment-submit:hover {
+    background: #127a40;
+  }
+
+  .comment-error {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    background: #fef2f2;
+    color: #b42318;
+    font-size: 0.9rem;
+  }
+
+  .comment-success {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    background: #edf7f1;
+    color: #127a40;
+    font-size: 0.9rem;
+  }
+
   /* フッター */
   .footer-section-title {
     margin: 0 0 1.25rem;
