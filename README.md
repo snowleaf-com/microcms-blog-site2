@@ -33,23 +33,27 @@ npm run dev
 
 `main` への push / マージで GitHub Actions（`.github/workflows/deploy.yml`）が動き、Cloudflare Workers へ自動デプロイします。
 
-事前にリポジトリの Secrets へ次を設定してください。
+リポジトリの **Settings → Secrets and variables → Actions** に次を登録してください（デプロイ時に Workers Secrets へ同期されます）。
 
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
+| Secret 名 | 用途 |
+|-----------|------|
+| `CLOUDFLARE_API_TOKEN` | デプロイ用 |
+| `CLOUDFLARE_ACCOUNT_ID` | デプロイ用 |
+| `MICROCMS_SERVICE_DOMAIN` | microCMS |
+| `MICROCMS_API_KEY` | microCMS |
+| `TURNSTILE_SITE_KEY` | コメント用（任意） |
+| `TURNSTILE_SECRET_KEY` | コメント用（任意） |
 
-※ microCMS の Secret（`MICROCMS_*`）は Workers 側に別途載せておく必要があります（下記の手動デプロイ、または `wrangler secret`）。
+値を変えたあとは、`main` に何か push / 再実行すれば本番に反映されます。  
+`wrangler secret put` を個別に叩く必要はありません。
 
-コメント機能用（任意）:
+D1 データベース `snowleaf-db` は `wrangler.jsonc` の `d1_databases` で紐づいています。
 
-- `TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`（Cloudflare Turnstile）
-- D1 データベース `snowleaf-db`（`wrangler.jsonc` の `d1_databases`）
-
-初回またはスキーマ更新時:
+ローカル用マイグレーション:
 
 ```bash
 npx wrangler d1 migrations apply snowleaf-db --local   # ローカル
-npx wrangler d1 migrations apply snowleaf-db --remote  # 本番
+npx wrangler d1 migrations apply snowleaf-db --remote  # 手動で本番に当てる場合
 ```
 
 ### 手動デプロイ
