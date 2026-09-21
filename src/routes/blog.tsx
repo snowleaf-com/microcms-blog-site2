@@ -96,7 +96,7 @@ export function BlogDetailPage({
               dangerouslySetInnerHTML={{ __html: html }}
             />
 
-            <div class="article-comments">
+            <div id="comments" class="article-comments">
               {commentSuccess ? (
                 <p class="comment-success">{commentSuccess}</p>
               ) : null}
@@ -107,6 +107,9 @@ export function BlogDetailPage({
                 siteKey={turnstileSiteKey}
                 error={commentError}
               />
+              {commentSuccess || commentError ? (
+                <script>{`document.getElementById('comments')?.scrollIntoView({behavior:'smooth',block:'start'})`}</script>
+              ) : null}
             </div>
           </div>
         </article>

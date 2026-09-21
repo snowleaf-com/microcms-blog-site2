@@ -93,7 +93,7 @@ app.post('/blog/:id', async (c) => {
   ).trim();
 
   if (!c.env.DB) {
-    return c.redirect(`/blog/${id}?error=unavailable`, 303);
+    return c.redirect(`/blog/${id}?error=unavailable#comments`, 303);
   }
 
   const secret = c.env.TURNSTILE_SECRET_KEY ?? '';
@@ -101,12 +101,12 @@ app.post('/blog/:id', async (c) => {
   if (siteKey || secret) {
     const ok = await verifyTurnstile(turnstileToken, secret);
     if (!ok) {
-      return c.redirect(`/blog/${id}?error=turnstile`, 303);
+      return c.redirect(`/blog/${id}?error=turnstile#comments`, 303);
     }
   }
 
   if (!author || !content || author.length > 50 || content.length > 1000) {
-    return c.redirect(`/blog/${id}?error=validation`, 303);
+    return c.redirect(`/blog/${id}?error=validation#comments`, 303);
   }
 
   await createComment(c.env.DB, { blogId: id, author, content });
@@ -126,7 +126,7 @@ app.post('/blog/:id', async (c) => {
     sameSite: 'Lax'
   });
 
-  return c.redirect(`/blog/${id}`, 303);
+  return c.redirect(`/blog/${id}#comments`, 303);
 });
 
 app.get('/blog/:id', async (c) => {
