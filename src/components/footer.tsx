@@ -7,33 +7,29 @@ type FooterProps = {
 
 export function Footer({ tags }: FooterProps) {
   return (
-    <footer class="mt-10">
-      <div class="w-[min(1100px,calc(100%-32px))] mx-auto py-4">
-        <div class="grid grid-cols-1 gap-3.5">
-          <section class="border border-[var(--color-line)] bg-[var(--color-paper)] p-3.5">
-            <h3 class="m-0 mb-2.5 text-xs tracking-wide uppercase text-[#818181]">
-              Tags
-            </h3>
-            <div class="flex flex-wrap gap-2">
-              <TagCard name="All" href="/" />
-              {tags.map((tag) => (
-                <TagCard key={tag.id} name={tag.name} href={`/tag/${tag.id}`} />
-              ))}
-            </div>
-          </section>
-          <section class="border border-[var(--color-line)] bg-[var(--color-paper)] p-3.5">
-            <h3 class="m-0 mb-2.5 text-xs tracking-wide uppercase text-[#818181]">
-              About
-            </h3>
-            <p class="m-0 text-[#363636] leading-[1.8] text-sm">
-              &quot;SnowLeaf&quot; は 管理人の趣味ブログです。
-            </p>
-          </section>
-          <p class="m-0 pt-1 text-center text-[#4c4c4c] text-[13px]">
-            © 2019- SnowLeaf
+    <footer class="site-footer mt-10 border-t border-(--color-line) bg-(--color-bg)">
+      <div class="l-main py-10 md:py-12 grid gap-10 md:gap-12">
+        <section>
+          <h3 class="footer-section-title">タグ</h3>
+          <div class="flex flex-wrap justify-center gap-2">
+            <TagCard name="すべて" href="/" />
+            {tags.map((tag) => (
+              <TagCard key={tag.id} name={tag.name} href={`/tag/${tag.id}`} />
+            ))}
+          </div>
+        </section>
+
+        <section class="text-center">
+          <h3 class="footer-section-title">このサイトについて</h3>
+          <p class="m-0 text-(--color-muted) leading-[1.9] text-sm max-w-md mx-auto">
+            SnowLeaf は、管理人の趣味ブログです。
           </p>
-        </div>
+        </section>
       </div>
+
+      <p class="m-0 py-4 text-center text-(--color-muted) text-[13px] border-t border-(--color-line)">
+        © 2019– SnowLeaf
+      </p>
     </footer>
   );
 }

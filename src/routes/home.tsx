@@ -28,7 +28,7 @@ function ChevronRight() {
 
 export function HomePage({ posts, hasConfig }: HomePageProps) {
   return (
-    <main class="mx-auto w-[min(1100px,calc(100%-32px))] py-6 pb-16 sm:py-8 md:pb-16">
+    <main class="l-main py-3 pb-8">
       {!hasConfig ? (
         <p class="my-4 border border-dashed border-[#73b78f] bg-[#edf7f1] text-[#225136] py-2.5 px-3">
           設定エラーです。
@@ -40,13 +40,13 @@ export function HomePage({ posts, hasConfig }: HomePageProps) {
           href="https://garden.snow-leaf.com/"
           target="_blank"
           rel="noopener noreferrer"
-          class="group relative block overflow-hidden border border-[var(--color-line)] transition hover:border-[var(--color-accent)] sm:min-h-[140px]"
+          class="group relative block overflow-hidden border border-(--color-line) transition hover:border-(--color-accent) sm:min-h-[140px]"
         >
           <picture>
             <source
               type="image/webp"
               srcset="/grass-bg-640.webp 640w, /grass-bg.webp 1024w"
-              sizes="(max-width: 1100px) calc(100vw - 32px), 1100px"
+              sizes="(max-width: 1200px) calc(100vw - 32px), 1200px"
             />
             <img
               src="/grass-bg.jpg"
@@ -79,14 +79,11 @@ export function HomePage({ posts, hasConfig }: HomePageProps) {
         </a>
       </section>
 
-      <section
-        id="latest"
-        class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3"
-      >
+      <section id="latest" class="article-list">
         {posts.length > 0 ? (
           posts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (
-          <div class="col-span-full border border-dashed border-[var(--color-line)] bg-[#fcfcfa] py-8 px-6 text-center text-[var(--color-muted)] sm:py-10">
+          <div class="col-span-full border border-dashed border-(--color-line) bg-[#fcfcfa] py-8 px-6 text-center text-(--color-muted) sm:py-10">
             該当する記事がありません。
           </div>
         )}

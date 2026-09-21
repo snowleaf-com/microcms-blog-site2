@@ -61,14 +61,7 @@ export function Layout({
           ))}
           <link rel="stylesheet" href="/styles.css" />
           {html`
-            <link
-              rel="preload"
-              href="/fonts.css"
-              as="style"
-              onload="this.onload=null;this.rel='stylesheet'"
-            />
             <noscript>
-              <link rel="stylesheet" href="/fonts.css" />
               <style>
                 .media-frame img {
                   opacity: 1 !important;

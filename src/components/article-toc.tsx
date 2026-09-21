@@ -4,7 +4,45 @@ type ArticleTocProps = {
   toc: TocItem[];
 };
 
-export function ArticleToc({ toc }: ArticleTocProps) {
+function TocList({ toc }: { toc: TocItem[] }) {
+  return (
+    <ol class="m-0 p-0 list-none">
+      {toc.map((item, index) => (
+        <li
+          key={item.id}
+          class={`toc__item${item.level === 3 ? ' toc__item--3' : ' toc__item--2'}`}
+        >
+          <a
+            href={`#${item.id}`}
+            data-toc-link={item.id}
+            class={index === 0 ? 'is-active' : undefined}
+          >
+            {item.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function TocTitle() {
+  return (
+    <h2 class="toc__title">
+      <img
+        src="/toc-books.svg"
+        alt=""
+        width={20}
+        height={20}
+        class="toc__icon"
+        decoding="async"
+      />
+      <span>目次</span>
+    </h2>
+  );
+}
+
+/** PC: 右サイドバーの固定目次 */
+export function ArticleTocSidebar({ toc }: ArticleTocProps) {
   if (toc.length === 0) {
     return null;
   }
@@ -12,41 +50,41 @@ export function ArticleToc({ toc }: ArticleTocProps) {
   return (
     <aside
       id="article-toc"
-      class="article-toc max-[920px]:static max-[920px]:right-auto max-[920px]:w-auto fixed z-[5] right-[max(16px,(100vw-1100px)/2)] w-[320px]"
+      class="article-toc toc toc--sidebar max-[920px]:hidden fixed z-5 right-[max(16px,(100vw-1200px)/2)] w-[320px]"
       data-toc="true"
     >
-      <nav
-        class="border border-[var(--color-line)] bg-[var(--color-paper)] p-4"
-        aria-label="目次"
-      >
-        <h2 class="m-0 mb-3 text-xs tracking-[0.06em] uppercase text-[var(--color-muted)]">
-          目次
-        </h2>
-        <ol class="m-0 p-0 list-none grid gap-2 text-[13px] leading-snug">
-          {toc.map((item, index) => (
-            <li
-              key={item.id}
-              class={
-                item.level === 3
-                  ? 'pl-3 border-l border-[var(--color-line)] ml-1'
-                  : ''
-              }
-            >
-              <a
-                href={`#${item.id}`}
-                data-toc-link={item.id}
-                class={`block py-0.5 border-l-2 border-transparent pl-2 -ml-px text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors${
-                  index === 0
-                    ? ' text-[var(--color-accent)] border-[var(--color-accent)] font-semibold'
-                    : ''
-                }`}
-              >
-                {item.text}
-              </a>
-            </li>
-          ))}
-        </ol>
+      <TocTitle />
+      <nav class="toc__list-wrap" aria-label="目次">
+        <div class="toc__list">
+          <TocList toc={toc} />
+        </div>
       </nav>
     </aside>
+  );
+}
+
+/** スマホ: 本文先頭のアコーディオン目次（Open / Close） */
+export function ArticleTocAccordion({ toc }: ArticleTocProps) {
+  if (toc.length === 0) {
+    return null;
+  }
+
+  return (
+    <nav
+      id="article-toc-mobile"
+      class="toc toc--accordion min-[921px]:hidden"
+      aria-label="目次"
+      data-toc-accordion="true"
+    >
+      <TocTitle />
+      <div class="toc__accordion" data-toc-panel style={{ height: '0px' }}>
+        <div class="toc__list">
+          <TocList toc={toc} />
+        </div>
+      </div>
+      <button type="button" class="toc__toggle" data-toc-toggle>
+        Open
+      </button>
+    </nav>
   );
 }
