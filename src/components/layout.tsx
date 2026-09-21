@@ -41,6 +41,7 @@ export function Layout({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <title>{title}</title>
           <meta name="description" content={description} />
+          <link rel="icon" href="/favicon.ico" sizes="any" />
           {preloads.map((preload) => (
             <link
               key={`${preload.as}:${preload.href}`}
