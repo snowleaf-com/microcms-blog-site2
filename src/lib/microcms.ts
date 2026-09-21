@@ -67,7 +67,7 @@ export async function getBlogs(
   }
 
   const filters = params?.tagId
-    ? `tag[equals]${params.tagId}`
+    ? `tags[contains]${params.tagId}`
     : undefined;
 
   try {

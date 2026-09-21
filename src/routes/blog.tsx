@@ -54,14 +54,16 @@ export function BlogDetailPage({ article, html, toc }: BlogDetailPageProps) {
                 <span class="text-[var(--color-muted)]">
                   {article.author?.name ?? 'SnowLeaf管理者'}
                 </span>
-                {article.tag ? (
+                {article.tags && article.tags.length > 0 ? (
                   <ul class="m-0 p-0 list-none flex flex-wrap gap-2 justify-end">
-                    <li>
-                      <TagCard
-                        name={article.tag.name}
-                        href={`/tag/${article.tag.id}`}
-                      />
-                    </li>
+                    {article.tags.map((tag) => (
+                      <li key={tag.id}>
+                        <TagCard
+                          name={tag.name}
+                          href={`/tag/${tag.id}`}
+                        />
+                      </li>
+                    ))}
                   </ul>
                 ) : null}
               </div>

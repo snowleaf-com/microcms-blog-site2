@@ -42,9 +42,9 @@ export function PostCard({ post }: PostCardProps) {
           </a>
         </h2>
         <div class="flex flex-wrap gap-2">
-          {post.tag ? (
-            <TagCard name={post.tag.name} href={`/tag/${post.tag.id}`} />
-          ) : null}
+          {post.tags?.map((tag) => (
+            <TagCard key={tag.id} name={tag.name} href={`/tag/${tag.id}`} />
+          ))}
         </div>
       </div>
     </article>

@@ -22,7 +22,7 @@ export type Blog = {
   excerpt?: string;
   content: string;
   eyecatch?: MicroCmsImage;
-  tag?: Tag;
+  tags?: Tag[];
   author?: Author;
   publishedAt?: string;
   updatedAt?: string;
