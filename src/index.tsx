@@ -8,7 +8,7 @@ import {
   getTags,
   hasMicroCmsConfig
 } from './lib/microcms';
-import { createComment, getCommentsByBlogId } from './lib/comment';
+import { createComment, getCommentsByBlogId, hashIp, isDuplicateRecentContent, isIpRateLimited } from './lib/comment';
 import { microCmsImageUrl, microCmsSrcSet } from './lib/image';
 import { highlightCodeInHtml } from './lib/shiki';
 import { createTocAndHtml } from './lib/toc';
@@ -37,10 +37,24 @@ function commentErrorMessage(code?: string) {
   if (code === 'validation') {
     return '名前とコメントを正しく入力してください。';
   }
+  if (code === 'rate') {
+    return '投稿が少し早すぎます。しばらくしてから再度お試しください。';
+  }
+  if (code === 'duplicate') {
+    return '直前と同じ内容のコメントは投稿できません。';
+  }
   if (code === 'unavailable') {
     return 'コメント機能の準備中です。しばらくしてからお試しください。';
   }
   return '';
+}
+
+function getClientIp(c: { req: { header: (name: string) => string | undefined } }) {
+  return (
+    c.req.header('cf-connecting-ip') ||
+    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ||
+    ''
+  );
 }
 
 app.get('/api/health', (c) => {
@@ -109,7 +123,23 @@ app.post('/blog/:id', async (c) => {
     return c.redirect(`/blog/${id}?error=validation#comments`, 303);
   }
 
-  await createComment(c.env.DB, { blogId: id, author, content });
+  const ip = getClientIp(c);
+  const ipHash = ip ? await hashIp(ip) : '';
+
+  if (ipHash && (await isIpRateLimited(c.env.DB, ipHash))) {
+    return c.redirect(`/blog/${id}?error=rate#comments`, 303);
+  }
+
+  if (await isDuplicateRecentContent(c.env.DB, id, content)) {
+    return c.redirect(`/blog/${id}?error=duplicate#comments`, 303);
+  }
+
+  await createComment(c.env.DB, {
+    blogId: id,
+    author,
+    content,
+    ipHash
+  });
 
   setCookie(c, AUTHOR_COOKIE, author, {
     path: '/',
