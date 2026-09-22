@@ -22,7 +22,7 @@ export function Footer({ tags }: FooterProps) {
         <section class="text-center">
           <h3 class="footer-section-title">このサイトについて</h3>
           <p class="m-0 text-(--color-muted) leading-[1.9] text-sm max-w-md mx-auto">
-            SnowLeaf は、管理人の趣味ブログです。
+            SnowLeafは、趣味ブログとして始まりましたが、今はご飯ブログとなっています。今後は他の趣味についても書くスペースを作る予定です。
           </p>
         </section>
       </div>

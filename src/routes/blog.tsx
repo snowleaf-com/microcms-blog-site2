@@ -4,6 +4,8 @@ import {
 } from '../components/article-toc';
 import { CommentForm } from '../components/comment-form';
 import { CommentList } from '../components/comment-list';
+import { CommentPolicy } from '../components/comment-policy';
+import { ShareButtons } from '../components/share-buttons';
 import { TagCard } from '../components/tag-card';
 import type { Comment } from '../lib/comment';
 import { formatDate } from '../lib/date';
@@ -15,6 +17,7 @@ type BlogDetailPageProps = {
   html: string;
   toc: TocItem[];
   comments: Comment[];
+  pageUrl: string;
   commentAuthor?: string;
   turnstileSiteKey?: string;
   commentError?: string;
@@ -29,6 +32,7 @@ export function BlogDetailPage({
   html,
   toc,
   comments,
+  pageUrl,
   commentAuthor = '',
   turnstileSiteKey = '',
   commentError,
@@ -44,7 +48,7 @@ export function BlogDetailPage({
 
   return (
     <main class="l-main py-3 pb-8">
-      <div class="article-layout grid grid-cols-1 gap-6 min-[921px]:grid-cols-[1fr_320px] content-start">
+      <div class="article-layout grid grid-cols-1 gap-6 min-[921px]:grid-cols-[1fr_320px] min-[921px]:items-stretch">
         <article class="article bg-(--color-paper) overflow-hidden">
           {eyecatch && eyecatchSrc ? (
             <figure class="media-frame m-0 aspect-[1200/630] w-full">
@@ -96,25 +100,32 @@ export function BlogDetailPage({
               dangerouslySetInnerHTML={{ __html: html }}
             />
 
-            <div id="comments" class="article-comments">
-              {commentSuccess ? (
-                <p class="comment-success">{commentSuccess}</p>
-              ) : null}
-              <CommentList comments={comments} />
-              <CommentForm
-                blogId={article.id}
-                author={commentAuthor}
-                siteKey={turnstileSiteKey}
-                error={commentError}
-              />
-              {commentSuccess || commentError ? (
-                <script
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      "document.getElementById('comments')?.scrollIntoView({behavior:'smooth',block:'start'})"
-                  }}
+            <hr class="article-divider" />
+
+            <div class="article-footer">
+              <ShareButtons url={pageUrl} title={article.title} />
+              <CommentPolicy />
+
+              <div id="comments" class="article-comments">
+                {commentSuccess ? (
+                  <p class="comment-success">{commentSuccess}</p>
+                ) : null}
+                <CommentList comments={comments} />
+                <CommentForm
+                  blogId={article.id}
+                  author={commentAuthor}
+                  siteKey={turnstileSiteKey}
+                  error={commentError}
                 />
-              ) : null}
+                {commentSuccess || commentError ? (
+                  <script
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        "document.getElementById('comments')?.scrollIntoView({behavior:'smooth',block:'start'})"
+                    }}
+                  />
+                ) : null}
+              </div>
             </div>
           </div>
         </article>
