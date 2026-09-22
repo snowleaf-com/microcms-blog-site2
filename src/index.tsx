@@ -34,7 +34,7 @@ const SUCCESS_COOKIE = 'snowleaf-comment-success';
 
 /** 旧 Next.js の revalidate = 300 相当（記事詳細はコメントのためキャッシュしない） */
 const pageCache = cache({
-  cacheName: 'snowleaf-pages-v1',
+  cacheName: 'snowleaf-pages-v2',
   cacheControl: 'public, max-age=300'
 });
 
