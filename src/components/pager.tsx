@@ -17,12 +17,12 @@ export function Pager({ pager }: PagerProps) {
           <span class="box-link__icon" aria-hidden="true">
             ←
           </span>
-          <span>Newer</span>
+          <span>前へ</span>
         </a>
       ) : null}
       {olderHref ? (
         <a class="box-link pager__older-link" href={olderHref}>
-          <span>Older</span>
+          <span>次へ</span>
           <span class="box-link__icon" aria-hidden="true">
             →
           </span>

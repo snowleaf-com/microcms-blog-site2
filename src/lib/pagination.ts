@@ -1,13 +1,15 @@
 export const PAGE_SIZE = 12;
 
-export function parsePageParam(raw: string | undefined): number | null {
-  if (raw == null || raw === '') {
-    return 1;
-  }
-  if (!/^[1-9]\d*$/.test(raw)) {
+/** `/page-2` のような slug からページ番号を取る */
+export function parsePageSlug(slug: string | undefined): number | null {
+  if (!slug) {
     return null;
   }
-  return Number(raw);
+  const match = slug.match(/^page-([1-9]\d*)$/);
+  if (!match) {
+    return null;
+  }
+  return Number(match[1]);
 }
 
 export function totalPages(totalCount: number, limit = PAGE_SIZE): number {

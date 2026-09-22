@@ -15,7 +15,7 @@ import {
   buildHomePager,
   buildTagPager,
   pageOffset,
-  parsePageParam,
+  parsePageSlug,
   totalPages
 } from './lib/pagination';
 import { highlightCodeInHtml } from './lib/shiki';
@@ -108,8 +108,8 @@ app.get('/', pageCache, async (c) => {
   );
 });
 
-app.get('/page-:page{[1-9]\\d*}', pageCache, async (c) => {
-  const page = parsePageParam(c.req.param('page'));
+app.get('/:slug{page-[1-9]\\d*}', pageCache, async (c) => {
+  const page = parsePageSlug(c.req.param('slug'));
   if (page == null || page === 1) {
     return c.redirect('/', 302);
   }
@@ -281,9 +281,9 @@ app.get('/blog/:id', async (c) => {
   );
 });
 
-app.get('/tag/:id/page-:page{[1-9]\\d*}', pageCache, async (c) => {
+app.get('/tag/:id/:slug{page-[1-9]\\d*}', pageCache, async (c) => {
   const id = c.req.param('id');
-  const page = parsePageParam(c.req.param('page'));
+  const page = parsePageSlug(c.req.param('slug'));
   if (page == null || page === 1) {
     return c.redirect(`/tag/${id}`, 302);
   }
