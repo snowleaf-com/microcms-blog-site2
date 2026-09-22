@@ -717,8 +717,8 @@
 
   .box-link {
     align-items: center;
-    border: 1px solid var(--color-text);
-    color: inherit;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
     display: inline-flex;
     height: 3rem;
     justify-content: center;
@@ -727,13 +727,15 @@
     text-decoration: none;
     transition:
       background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
       color 0.2s ease-in-out;
     width: 8rem;
     box-sizing: border-box;
   }
 
   .box-link:hover {
-    background-color: var(--color-text);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
     color: #fff;
   }
 
