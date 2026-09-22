@@ -1,9 +1,13 @@
 import { PostCard } from '../components/post-card';
+import { Pager } from '../components/pager';
+import type { PagerLinks } from '../lib/pagination';
 import type { Blog } from '../types';
 
 type HomePageProps = {
   posts: Blog[];
   hasConfig: boolean;
+  pager?: PagerLinks | null;
+  showPromo?: boolean;
 };
 
 function ChevronRight() {
@@ -26,7 +30,12 @@ function ChevronRight() {
   );
 }
 
-export function HomePage({ posts, hasConfig }: HomePageProps) {
+export function HomePage({
+  posts,
+  hasConfig,
+  pager = null,
+  showPromo = true
+}: HomePageProps) {
   return (
     <main class="l-main py-3 pb-8">
       {!hasConfig ? (
@@ -35,49 +44,51 @@ export function HomePage({ posts, hasConfig }: HomePageProps) {
         </p>
       ) : null}
 
-      <section class="mb-6 sm:mb-8" aria-label="おすすめ">
-        <a
-          href="https://garden.snow-leaf.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="group relative block overflow-hidden border border-(--color-line) transition hover:border-(--color-accent) sm:min-h-[140px]"
-        >
-          <picture>
-            <source
-              type="image/webp"
-              srcset="/grass-bg-640.webp 640w, /grass-bg.webp 1024w"
-              sizes="(max-width: 1200px) calc(100vw - 32px), 1200px"
+      {showPromo ? (
+        <section class="mb-6 sm:mb-8" aria-label="おすすめ">
+          <a
+            href="https://garden.snow-leaf.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group relative block overflow-hidden border border-(--color-line) transition hover:border-(--color-accent) sm:min-h-[140px]"
+          >
+            <picture>
+              <source
+                type="image/webp"
+                srcset="/grass-bg-640.webp 640w, /grass-bg.webp 1024w"
+                sizes="(max-width: 1200px) calc(100vw - 32px), 1200px"
+              />
+              <img
+                src="/grass-bg.jpg"
+                alt=""
+                width={1024}
+                height={680}
+                class="absolute inset-0 h-full w-full object-cover opacity-80 transition group-hover:opacity-90"
+                fetchpriority="high"
+                decoding="async"
+              />
+            </picture>
+            <span
+              class="absolute inset-0"
+              style={{ backgroundColor: 'rgba(20, 45, 28, 0.42)' }}
             />
-            <img
-              src="/grass-bg.jpg"
-              alt=""
-              width={1024}
-              height={680}
-              class="absolute inset-0 h-full w-full object-cover opacity-80 transition group-hover:opacity-90"
-              fetchpriority="high"
-              decoding="async"
-            />
-          </picture>
-          <span
-            class="absolute inset-0"
-            style={{ backgroundColor: 'rgba(20, 45, 28, 0.42)' }}
-          />
-          <span class="relative z-10 flex min-h-[140px] items-center justify-between gap-2 p-5 sm:p-6 md:p-7">
-            <span class="min-w-0 flex-1">
-              <span class="text-sm font-medium uppercase tracking-wider text-[#b8e8b0]">
-                おすすめツール
+            <span class="relative z-10 flex min-h-[140px] items-center justify-between gap-2 p-5 sm:p-6 md:p-7">
+              <span class="min-w-0 flex-1">
+                <span class="text-sm font-medium uppercase tracking-wider text-[#b8e8b0]">
+                  おすすめツール
+                </span>
+                <h2 class="mt-1.5 text-lg font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)] sm:text-xl">
+                  芝生の希釈計算サイト
+                </h2>
+                <p class="mt-1 text-sm text-white/95 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
+                  芝生・農薬・ガーデニングの計算を簡単に
+                </p>
               </span>
-              <h2 class="mt-1.5 text-lg font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)] sm:text-xl">
-                芝生の希釈計算サイト
-              </h2>
-              <p class="mt-1 text-sm text-white/95 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
-                芝生・農薬・ガーデニングの計算を簡単に
-              </p>
+              <ChevronRight />
             </span>
-            <ChevronRight />
-          </span>
-        </a>
-      </section>
+          </a>
+        </section>
+      ) : null}
 
       <section id="latest" class="article-list">
         {posts.length > 0 ? (
@@ -88,6 +99,8 @@ export function HomePage({ posts, hasConfig }: HomePageProps) {
           </div>
         )}
       </section>
+
+      {pager ? <Pager pager={pager} /> : null}
     </main>
   );
 }

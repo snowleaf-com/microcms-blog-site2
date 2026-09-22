@@ -41,25 +41,27 @@ function TocTitle() {
   );
 }
 
-/** PC: 右サイドバーの固定目次 */
+/** PC: 右サイドバーの sticky 目次（記事列と同じ高さで止まり、末尾で一緒に流れる） */
 export function ArticleTocSidebar({ toc }: ArticleTocProps) {
   if (toc.length === 0) {
     return null;
   }
 
   return (
-    <aside
-      id="article-toc"
-      class="article-toc toc toc--sidebar max-[920px]:hidden fixed z-5 right-[max(16px,(100vw-1200px)/2)] w-[320px]"
-      data-toc="true"
-    >
-      <TocTitle />
-      <nav class="toc__list-wrap" aria-label="目次">
-        <div class="toc__list">
-          <TocList toc={toc} />
-        </div>
-      </nav>
-    </aside>
+    <div class="article-toc-rail max-[920px]:hidden">
+      <aside
+        id="article-toc"
+        class="article-toc toc toc--sidebar"
+        data-toc="true"
+      >
+        <TocTitle />
+        <nav class="toc__list-wrap" aria-label="目次">
+          <div class="toc__list">
+            <TocList toc={toc} />
+          </div>
+        </nav>
+      </aside>
+    </div>
   );
 }
 

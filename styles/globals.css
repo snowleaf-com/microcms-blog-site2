@@ -472,6 +472,11 @@
   }
 
   /* 目次 */
+  .article-toc-rail {
+    position: relative;
+    align-self: stretch;
+  }
+
   .toc {
     display: flex;
     flex-direction: column;
@@ -519,7 +524,10 @@
   }
 
   .toc--sidebar {
-    max-height: calc(100vh - 1.5rem - 2rem);
+    position: sticky;
+    top: 1.5rem;
+    /* HC 準拠: ビューポート内に収まる上限（下部に余白を残す） */
+    max-height: calc(100vh - 1.5rem - 340px);
     box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.12);
   }
   .toc--sidebar .toc__title {
@@ -530,6 +538,7 @@
   }
   .toc--sidebar .toc__list-wrap {
     flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
   }
   .toc--sidebar .toc__list {
@@ -569,19 +578,173 @@
     color: var(--color-accent);
   }
 
-  /* コメント */
-  .article-comments {
-    margin: 2.5rem 2rem 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-line);
-    scroll-margin-top: 1.5rem;
+  /* 記事フッタ（シェア・ポリシー・コメント） */
+  .article-footer {
+    padding: 0 2rem;
+  }
+
+  .article-footer > * {
+    margin-bottom: 2rem;
+  }
+
+  .article-footer > *:last-child {
+    margin-bottom: 0;
   }
 
   @media screen and (max-width: 640px) {
-    .article-comments {
-      margin-left: 1rem;
-      margin-right: 1rem;
+    .article-footer {
+      padding: 0 1rem;
     }
+  }
+
+  .share__label {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .share__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .share__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: #fff;
+    color: var(--color-text);
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .share__link:hover {
+    transform: translateY(-1px);
+  }
+
+  .share__link--x:hover {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+  }
+
+  .share__link--x:hover .share__icon {
+    fill: #fff;
+  }
+
+  .share__link--facebook:hover {
+    background: #1877f2;
+    border-color: #1877f2;
+    color: #fff;
+  }
+
+  .share__link--facebook:hover .share__icon {
+    fill: #fff;
+  }
+
+  .share__icon {
+    fill: currentColor;
+    height: 1.15rem;
+    width: 1.15rem;
+    display: block;
+  }
+
+  .comment-policy {
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: #fff;
+    padding: 1.25rem 1.35rem;
+  }
+
+  .comment-policy__title {
+    margin: 0 0 0.65rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-text);
+  }
+
+  .comment-policy__body {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--color-muted);
+  }
+
+  /* ページネーション（Hypertext Candy 準拠） */
+  .pager {
+    color: var(--color-text);
+    height: 3rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .pager__counter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+  }
+
+  .pager__newer-link {
+    position: absolute;
+    left: 0;
+  }
+
+  .pager__older-link {
+    position: absolute;
+    right: 0;
+  }
+
+  .box-link {
+    align-items: center;
+    border: 1px solid var(--color-text);
+    color: inherit;
+    display: inline-flex;
+    height: 3rem;
+    justify-content: center;
+    letter-spacing: 1px;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+    width: 8rem;
+    box-sizing: border-box;
+  }
+
+  .box-link:hover {
+    background-color: var(--color-text);
+    color: #fff;
+  }
+
+  .box-link__icon + span,
+  span + .box-link__icon {
+    margin-left: 1em;
+  }
+
+  /* コメント */
+  .article-comments {
+    scroll-margin-top: 1.5rem;
   }
 
   .comment-heading {

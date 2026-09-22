@@ -1,5 +1,4 @@
 (() => {
-  const sidebar = document.getElementById('article-toc');
   const accordion = document.querySelector('[data-toc-accordion]');
 
   const links = Array.from(document.querySelectorAll('[data-toc-link]'));
@@ -10,19 +9,6 @@
         .filter((id) => Boolean(id))
     )
   ];
-
-  function getArticleTop() {
-    const article = document.querySelector('.article-layout .article');
-    if (!article) return null;
-    return article.getBoundingClientRect().top;
-  }
-
-  function updateSidebarTop() {
-    if (!sidebar) return;
-    const top = getArticleTop();
-    if (top == null) return;
-    sidebar.style.top = `max(1.5rem, ${top}px)`;
-  }
 
   function setActive(id) {
     links.forEach((link) => {
@@ -69,13 +55,6 @@
       },
       { passive: true }
     );
-  }
-
-  if (sidebar) {
-    updateSidebarTop();
-    requestAnimationFrame(updateSidebarTop);
-    window.addEventListener('resize', updateSidebarTop, { passive: true });
-    window.addEventListener('scroll', updateSidebarTop, { passive: true });
   }
 
   if (ids.length === 0) return;

@@ -10,6 +10,14 @@ import {
 } from './lib/microcms';
 import { createComment, getCommentsByBlogId, hashIp, isDuplicateRecentContent, isIpRateLimited } from './lib/comment';
 import { microCmsImageUrl, microCmsSrcSet } from './lib/image';
+import {
+  PAGE_SIZE,
+  buildHomePager,
+  buildTagPager,
+  pageOffset,
+  parsePageParam,
+  totalPages
+} from './lib/pagination';
 import { highlightCodeInHtml } from './lib/shiki';
 import { createTocAndHtml } from './lib/toc';
 import { verifyTurnstile } from './lib/turnstile';
@@ -71,9 +79,10 @@ app.get('/api/health', (c) => {
 app.get('/', pageCache, async (c) => {
   const env = c.env;
   const [posts, tags] = await Promise.all([
-    getBlogs(env, { limit: 12 }),
+    getBlogs(env, { limit: PAGE_SIZE, offset: 0 }),
     getTags(env)
   ]);
+  const pager = buildHomePager(1, posts.totalCount);
 
   return c.html(
     <Layout
@@ -92,6 +101,47 @@ app.get('/', pageCache, async (c) => {
       <HomePage
         posts={posts.contents}
         hasConfig={hasMicroCmsConfig(env)}
+        pager={pager}
+        showPromo
+      />
+    </Layout>
+  );
+});
+
+app.get('/page-:page{[1-9]\\d*}', pageCache, async (c) => {
+  const page = parsePageParam(c.req.param('page'));
+  if (page == null || page === 1) {
+    return c.redirect('/', 302);
+  }
+
+  const env = c.env;
+  const [posts, tags] = await Promise.all([
+    getBlogs(env, {
+      limit: PAGE_SIZE,
+      offset: pageOffset(page)
+    }),
+    getTags(env)
+  ]);
+
+  const pages = totalPages(posts.totalCount);
+  if (pages === 0 || page > pages) {
+    return c.html(
+      <Layout title="404 | SnowLeaf" tags={tags}>
+        <NotFoundPage />
+      </Layout>,
+      404
+    );
+  }
+
+  const pager = buildHomePager(page, posts.totalCount);
+
+  return c.html(
+    <Layout title={`記事一覧 ${page}ページ目 | SnowLeaf`} tags={tags}>
+      <HomePage
+        posts={posts.contents}
+        hasConfig={hasMicroCmsConfig(env)}
+        pager={pager}
+        showPromo={false}
       />
     </Layout>
   );
@@ -221,6 +271,7 @@ app.get('/blog/:id', async (c) => {
         html={html}
         toc={toc}
         comments={comments}
+        pageUrl={new URL(`/blog/${id}`, c.req.url).href}
         commentAuthor={commentAuthor}
         turnstileSiteKey={turnstileSiteKey}
         commentError={commentErrorMessage(c.req.query('error'))}
@@ -230,22 +281,63 @@ app.get('/blog/:id', async (c) => {
   );
 });
 
-app.get('/tag/:id', pageCache, async (c) => {
+app.get('/tag/:id/page-:page{[1-9]\\d*}', pageCache, async (c) => {
   const id = c.req.param('id');
+  const page = parsePageParam(c.req.param('page'));
+  if (page == null || page === 1) {
+    return c.redirect(`/tag/${id}`, 302);
+  }
+
   const env = c.env;
   const [posts, tags] = await Promise.all([
-    getBlogs(env, { tagId: id, limit: 12 }),
+    getBlogs(env, {
+      tagId: id,
+      limit: PAGE_SIZE,
+      offset: pageOffset(page)
+    }),
     getTags(env)
   ]);
 
   const currentTag = tags.find((tag) => tag.id === id);
+  const pages = totalPages(posts.totalCount);
+  if (pages === 0 || page > pages) {
+    return c.html(
+      <Layout title="404 | SnowLeaf" tags={tags}>
+        <NotFoundPage />
+      </Layout>,
+      404
+    );
+  }
+
+  const pager = buildTagPager(id, page, posts.totalCount);
+
+  return c.html(
+    <Layout
+      title={`${currentTag?.name ?? 'Tag'} ${page}ページ目 | SnowLeaf`}
+      tags={tags}
+    >
+      <TagPage currentTag={currentTag} posts={posts.contents} pager={pager} />
+    </Layout>
+  );
+});
+
+app.get('/tag/:id', pageCache, async (c) => {
+  const id = c.req.param('id');
+  const env = c.env;
+  const [posts, tags] = await Promise.all([
+    getBlogs(env, { tagId: id, limit: PAGE_SIZE, offset: 0 }),
+    getTags(env)
+  ]);
+
+  const currentTag = tags.find((tag) => tag.id === id);
+  const pager = buildTagPager(id, 1, posts.totalCount);
 
   return c.html(
     <Layout
       title={`${currentTag?.name ?? 'Tag'} | SnowLeaf`}
       tags={tags}
     >
-      <TagPage currentTag={currentTag} posts={posts.contents} />
+      <TagPage currentTag={currentTag} posts={posts.contents} pager={pager} />
     </Layout>
   );
 });

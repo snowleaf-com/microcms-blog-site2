@@ -1,12 +1,15 @@
 import { PostCard } from '../components/post-card';
+import { Pager } from '../components/pager';
+import type { PagerLinks } from '../lib/pagination';
 import type { Blog, Tag } from '../types';
 
 type TagPageProps = {
   currentTag?: Tag;
   posts: Blog[];
+  pager?: PagerLinks | null;
 };
 
-export function TagPage({ currentTag, posts }: TagPageProps) {
+export function TagPage({ currentTag, posts, pager = null }: TagPageProps) {
   return (
     <main class="l-main py-3 pb-8">
       <section class="mb-4">
@@ -29,6 +32,8 @@ export function TagPage({ currentTag, posts }: TagPageProps) {
           </div>
         )}
       </section>
+
+      {pager ? <Pager pager={pager} /> : null}
     </main>
   );
 }
