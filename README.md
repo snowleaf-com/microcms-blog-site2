@@ -77,9 +77,15 @@ npx wrangler secret bulk .dev.vars
 | パス | 説明 |
 |------|------|
 | `/` | 記事一覧 + おすすめバナー |
+| `/page-2` など | 記事一覧のページネーション |
 | `/blog/:id` | 記事詳細（Hono SSR） |
 | `/tag/:id` | タグ別一覧（Hono SSR） |
+| `/design` | デザインシステム見本（内部確認用） |
 | `/api/health` | ヘルスチェック API |
+
+## デザインシステム
+
+色・ボタン・タグなどの規約は [DESIGN.md](./DESIGN.md) を正本とします。トークンとクラス実装は `styles/globals.css`、見た目の確認は `/design` です。
 
 静的アセット（`/styles.css`, `/toc.js`, 画像）は Workers Static Assets で配信します。
 

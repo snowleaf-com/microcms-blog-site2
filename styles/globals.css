@@ -3,15 +3,29 @@
 @source "../src/**/*.{ts,tsx}";
 
 @theme inline {
-  /* Hypertext Candy と同系のシステムフォント（ネットワーク読み込みなし） */
+  /* SnowLeaf Design System — 詳細は DESIGN.md */
   --font-sans: Avenir, 'Hiragino Sans', 'ヒラギノ角ゴ ProN W3',
     'Hiragino Kaku Gothic ProN', 'Segoe UI', 'メイリオ', Meiryo, sans-serif;
+
   --color-bg: #f2f7f4;
   --color-paper: #fff;
-  --color-line: #e0e5e1;
+  --color-paper-soft: #f7faf8;
   --color-text: #1a2e22;
   --color-muted: #6b7c72;
+  --color-faint: #b1b1b1;
+  --color-line: #e0e5e1;
+  --color-line-strong: #e9e9e9;
   --color-accent: #208f4f;
+  --color-accent-hover: #127a40;
+  --color-accent-soft: #edf7f1;
+  --color-accent-soft-border: #c5e6d1;
+  --color-danger: #b42318;
+  --color-danger-soft: #fef2f2;
+  --color-on-accent: #fff;
+
+  --shadow-card: 0 10px 24px -10px rgb(0 0 0 / 0.12);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
 }
 
 @layer base {
@@ -58,8 +72,85 @@
 
 /* 記事本文（HTML で挿入される部分）— Hypertext Candy 準拠 / 緑 */
 @layer components {
+  /* --- Design System primitives (DESIGN.md) --- */
+  .sl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font: inherit;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+  }
+
+  .sl-btn--outline {
+    height: 3rem;
+    width: 8rem;
+    border: 1px solid var(--color-accent);
+    background: var(--color-paper);
+    color: var(--color-accent);
+  }
+
+  .sl-btn--outline:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .sl-btn--solid {
+    padding: 0.65rem 1.25rem;
+    border: 0;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .sl-btn--solid:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .sl-btn .box-link__icon + span,
+  .sl-btn span + .box-link__icon {
+    margin-left: 1em;
+  }
+
+  .sl-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-paper);
+    color: var(--color-text);
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      border-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+  }
+
+  .sl-chip:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .sl-panel {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-paper);
+    padding: 1.25rem 1.35rem;
+  }
+
   .article {
-    box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.12);
+    box-shadow: var(--shadow-card);
     padding-bottom: 1rem;
   }
 
@@ -73,7 +164,7 @@
   }
 
   .article-pub-date {
-    color: #b1b1b1;
+    color: var(--color-faint);
     letter-spacing: 1px;
     margin-bottom: 0.5rem;
     padding-top: 1.25rem;
@@ -97,7 +188,7 @@
 
   .article-divider {
     border: 0;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--color-line);
     height: 0;
     margin: 2rem 0;
     padding: 0;
@@ -183,8 +274,12 @@
     left: 0;
     display: block;
     width: 0.25em;
-    background-color: #208f4f;
-    background-image: linear-gradient(#3dd68c, #208f4f 72%, #127a40);
+    background-color: var(--color-accent);
+    background-image: linear-gradient(
+      #3dd68c,
+      var(--color-accent) 72%,
+      var(--color-accent-hover)
+    );
     content: '';
   }
 
@@ -195,7 +290,7 @@
     font-size: 1.25rem;
     font-weight: 700;
     line-height: 1.4;
-    border-bottom: 1px solid #e9e9e9;
+    border-bottom: 1px solid var(--color-line-strong);
   }
 
   .article-content h4 {
@@ -229,7 +324,7 @@
   .article-content th,
   .article-content td {
     padding: 0.5em 0.75em;
-    border: 1px solid #e9e9e9;
+    border: 1px solid var(--color-line-strong);
     text-align: left;
   }
 
@@ -304,7 +399,7 @@
   }
 
   .article-content a {
-    color: #208f4f;
+    color: var(--color-accent);
     text-decoration: underline;
     text-underline-offset: 2px;
     word-break: break-all;
@@ -365,10 +460,10 @@
   }
 
   .article-content .note {
-    background-color: #edf7f1;
-    border: 1px solid #c5e6d1;
+    background-color: var(--color-accent-soft);
+    border: 1px solid var(--color-accent-soft-border);
     border-radius: 0.25rem;
-    color: #127a40;
+    color: var(--color-accent-hover);
     padding: 1rem 1.25rem;
     line-height: 2;
   }
@@ -419,7 +514,7 @@
     display: block;
     height: 0;
     border: 0;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--color-line);
     margin: 2rem;
     padding: 0;
   }
@@ -480,7 +575,7 @@
   .toc {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: var(--color-paper);
   }
   .toc__title {
     display: flex;
@@ -528,7 +623,7 @@
     top: 1.5rem;
     /* HC 準拠: ビューポート内に収まる上限（下部に余白を残す） */
     max-height: calc(100vh - 1.5rem - 340px);
-    box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.12);
+    box-shadow: var(--shadow-card);
   }
   .toc--sidebar .toc__title {
     flex: 0 0 auto;
@@ -546,7 +641,7 @@
   }
 
   .toc--accordion {
-    border: 1px solid #e9e9e9;
+    border: 1px solid var(--color-line-strong);
     border-radius: 6px;
     margin-bottom: 2rem;
   }
@@ -565,7 +660,7 @@
     display: block;
     width: 100%;
     border: 0;
-    border-top: 1px solid #e9e9e9;
+    border-top: 1px solid var(--color-line-strong);
     background: transparent;
     cursor: pointer;
     font-size: 0.9rem;
@@ -623,8 +718,8 @@
     height: 2.75rem;
     padding: 0;
     border: 1px solid var(--color-line);
-    border-radius: 0.5rem;
-    background: #fff;
+    border-radius: var(--radius-sm);
+    background: var(--color-paper);
     color: var(--color-text);
     text-decoration: none;
     transition:
@@ -663,13 +758,6 @@
     height: 1.15rem;
     width: 1.15rem;
     display: block;
-  }
-
-  .comment-policy {
-    border: 1px solid var(--color-line);
-    border-radius: 0.75rem;
-    background: #fff;
-    padding: 1.25rem 1.35rem;
   }
 
   .comment-policy__title {
@@ -715,30 +803,6 @@
     right: 0;
   }
 
-  .box-link {
-    align-items: center;
-    border: 1px solid var(--color-accent);
-    color: var(--color-accent);
-    display: inline-flex;
-    height: 3rem;
-    justify-content: center;
-    letter-spacing: 1px;
-    text-align: center;
-    text-decoration: none;
-    transition:
-      background-color 0.2s ease-in-out,
-      border-color 0.2s ease-in-out,
-      color 0.2s ease-in-out;
-    width: 8rem;
-    box-sizing: border-box;
-  }
-
-  .box-link:hover {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    color: #fff;
-  }
-
   .box-link__icon + span,
   span + .box-link__icon {
     margin-left: 1em;
@@ -766,7 +830,7 @@
 
   .comment-item {
     padding: 1rem 1.1rem;
-    background: #f7faf8;
+    background: var(--color-paper-soft);
     border: 1px solid var(--color-line);
   }
 
@@ -812,45 +876,34 @@
     box-sizing: border-box;
     padding: 0.65rem 0.75rem;
     border: 1px solid var(--color-line);
-    background: #fff;
+    background: var(--color-paper);
     font: inherit;
     color: var(--color-text);
   }
 
   .comment-field input:focus,
   .comment-field textarea:focus {
-    outline: 2px solid rgb(32 143 79 / 0.35);
+    outline: 2px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
     outline-offset: 1px;
   }
 
   .comment-submit {
     justify-self: start;
-    padding: 0.65rem 1.25rem;
-    border: 0;
-    background: var(--color-accent);
-    color: #fff;
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .comment-submit:hover {
-    background: #127a40;
   }
 
   .comment-error {
     margin: 0 0 1rem;
     padding: 0.75rem 1rem;
-    background: #fef2f2;
-    color: #b42318;
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
     font-size: 0.9rem;
   }
 
   .comment-success {
     margin: 0 0 1rem;
     padding: 0.75rem 1rem;
-    background: #edf7f1;
-    color: #127a40;
+    background: var(--color-accent-soft);
+    color: var(--color-accent-hover);
     font-size: 0.9rem;
   }
 

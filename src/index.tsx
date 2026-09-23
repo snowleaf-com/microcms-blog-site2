@@ -22,6 +22,7 @@ import { highlightCodeInHtml } from './lib/shiki';
 import { createTocAndHtml } from './lib/toc';
 import { verifyTurnstile } from './lib/turnstile';
 import { BlogDetailPage } from './routes/blog';
+import { DesignSystemPage } from './routes/design';
 import { HomePage } from './routes/home';
 import { NotFoundPage } from './routes/not-found';
 import { TagPage } from './routes/tag';
@@ -338,6 +339,15 @@ app.get('/tag/:id', pageCache, async (c) => {
       tags={tags}
     >
       <TagPage currentTag={currentTag} posts={posts.contents} pager={pager} />
+    </Layout>
+  );
+});
+
+app.get('/design', async (c) => {
+  const tags = await getTags(c.env);
+  return c.html(
+    <Layout title="Design System | SnowLeaf" tags={tags}>
+      <DesignSystemPage />
     </Layout>
   );
 });
