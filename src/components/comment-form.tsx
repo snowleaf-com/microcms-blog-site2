@@ -46,7 +46,7 @@ export function CommentForm({
             data-theme="light"
           />
         ) : null}
-        <button type="submit" class="comment-submit">
+        <button type="submit" class="sl-btn sl-btn--solid comment-submit">
           投稿する
         </button>
       </form>

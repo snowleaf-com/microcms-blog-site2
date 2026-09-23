@@ -13,7 +13,7 @@ export function Pager({ pager }: PagerProps) {
         {currentPage} / {totalPages}
       </span>
       {newerHref ? (
-        <a class="box-link pager__newer-link" href={newerHref}>
+        <a class="sl-btn sl-btn--outline pager__newer-link" href={newerHref}>
           <span class="box-link__icon" aria-hidden="true">
             ←
           </span>
@@ -21,7 +21,7 @@ export function Pager({ pager }: PagerProps) {
         </a>
       ) : null}
       {olderHref ? (
-        <a class="box-link pager__older-link" href={olderHref}>
+        <a class="sl-btn sl-btn--outline pager__older-link" href={olderHref}>
           <span>次へ</span>
           <span class="box-link__icon" aria-hidden="true">
             →
