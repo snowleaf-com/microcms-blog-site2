@@ -43,21 +43,23 @@ function TocTitle() {
 
 /** PC: 右サイドバーの sticky 目次（記事列と同じ高さで止まり、末尾で一緒に流れる） */
 export function ArticleTocSidebar({ toc }: ArticleTocProps) {
-  if (toc.length === 0) {
-    return null;
-  }
+  const empty = toc.length === 0;
 
   return (
     <div class="article-toc-rail max-[920px]:hidden">
       <aside
         id="article-toc"
         class="article-toc toc toc--sidebar"
-        data-toc="true"
+        {...(empty ? {} : { 'data-toc': 'true' })}
       >
         <TocTitle />
         <nav class="toc__list-wrap" aria-label="目次">
           <div class="toc__list">
-            <TocList toc={toc} />
+            {empty ? (
+              <p class="toc__empty">目次なし</p>
+            ) : (
+              <TocList toc={toc} />
+            )}
           </div>
         </nav>
       </aside>
