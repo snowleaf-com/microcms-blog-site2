@@ -658,6 +658,13 @@
     padding: 1.25rem 1.5rem;
   }
 
+  .toc__empty {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+  }
+
   .toc--accordion {
     border: 1px solid var(--color-line-strong);
     border-radius: 6px;
