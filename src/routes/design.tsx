@@ -26,7 +26,8 @@ export function DesignSystemPage() {
         </h1>
         <p class="mt-3 max-w-2xl text-(--color-muted) leading-relaxed">
           定義の正本は <code>DESIGN.md</code>。実装トークンは{' '}
-          <code>styles/globals.css</code> の <code>@theme</code>。
+          <code>styles/globals.css</code> の <code>@theme</code>。本番 UI
+          も同じクラスを使います。
         </p>
         <p class="mt-2">
           <a href="/" class="text-(--color-accent) underline">
@@ -85,7 +86,8 @@ export function DesignSystemPage() {
           </button>
         </div>
         <p class="mt-3 m-0 text-sm text-(--color-muted)">
-          outline = ページネーション / solid = コメント送信
+          <code>.sl-btn--outline</code> = ページネーション /{' '}
+          <code>.sl-btn--solid</code> = コメント送信
         </p>
       </section>
 
@@ -102,6 +104,9 @@ export function DesignSystemPage() {
             静岡市葵区
           </a>
         </div>
+        <p class="mt-3 m-0 text-sm text-(--color-muted)">
+          <code>.sl-chip</code> = タグ（hover は枠と文字色のみ）
+        </p>
       </section>
 
       <section class="mb-12">

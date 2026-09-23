@@ -8,6 +8,7 @@
 - 角は基本スクエア寄り（過度な pill / 多層シャドウは避ける）
 - カードは「操作の入れ物」以外では増やさない
 - 色・ホバーはハードコードせずトークン経由
+- UI は DS クラスを使う（utility で色を直書きしない）
 
 ## カラー
 
@@ -52,21 +53,23 @@
 
 ### Outline ボタン `.sl-btn.sl-btn--outline`
 
-- 通常: 緑枠・緑文字・白地
-- hover: 緑塗り・白文字（`--color-accent`）
+- 通常: 緑枠・緑文字・白地（字重は継承、太字にしない）
+- hover: 緑塗り・白文字（`--color-accent` / `--color-on-accent`）
+- サイズ: 高さ `3rem`、幅 `8rem`
 - 用途: ページネーション「前へ / 次へ」
+- 互換: `.box-link` は同じ見た目のエイリアス
 
 ### Solid ボタン `.sl-btn.sl-btn--solid`
 
-- 通常: 緑塗り・白文字
+- 通常: 緑塗り・白文字・`font-weight: 600`
 - hover: `--color-accent-hover`
 - 用途: コメント投稿
 
 ### Chip `.sl-chip`
 
-- 通常: `--color-line-strong` 枠・本文色
+- 通常: `--color-line-strong` 枠・`--color-text`・白地
 - hover: accent 枠・accent 文字（塗りつぶさない）
-- 用途: タグ
+- 用途: タグ（`TagCard`）
 
 ### Panel `.sl-panel`
 
@@ -75,6 +78,7 @@
 
 ## やってはいけないこと
 
-- コンポーネント色を `#208f4f` など直書きする
+- コンポーネント色を `#208f4f` / `#e9e9e9` など直書きする
 - outline と chip の hover 言語を混ぜる（chip を緑塗りにしない）
 - SNS ブランド色（X / Facebook）以外で黒塗りボタンを増やす
+- DS クラスがあるのに utility で見た目を別定義する

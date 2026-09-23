@@ -79,7 +79,6 @@
     justify-content: center;
     box-sizing: border-box;
     font: inherit;
-    font-weight: 600;
     letter-spacing: 1px;
     text-align: center;
     text-decoration: none;
@@ -90,15 +89,30 @@
       color 0.2s ease-in-out;
   }
 
-  .sl-btn--outline {
+  .sl-btn--outline,
+  .box-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
     height: 3rem;
     width: 8rem;
     border: 1px solid var(--color-accent);
     background: var(--color-paper);
     color: var(--color-accent);
+    font: inherit;
+    letter-spacing: 1px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
   }
 
-  .sl-btn--outline:hover {
+  .sl-btn--outline:hover,
+  .box-link:hover {
     background: var(--color-accent);
     border-color: var(--color-accent);
     color: var(--color-on-accent);
@@ -109,6 +123,7 @@
     border: 0;
     background: var(--color-accent);
     color: var(--color-on-accent);
+    font-weight: 600;
   }
 
   .sl-btn--solid:hover {
@@ -116,7 +131,9 @@
   }
 
   .sl-btn .box-link__icon + span,
-  .sl-btn span + .box-link__icon {
+  .sl-btn span + .box-link__icon,
+  .box-link__icon + span,
+  span + .box-link__icon {
     margin-left: 1em;
   }
 
@@ -126,6 +143,7 @@
     justify-content: center;
     padding: 0.625rem 0.875rem;
     border: 1px solid var(--color-line-strong);
+    border-radius: 0;
     background: var(--color-paper);
     color: var(--color-text);
     font-size: 0.875rem;
@@ -801,11 +819,6 @@
   .pager__older-link {
     position: absolute;
     right: 0;
-  }
-
-  .box-link__icon + span,
-  span + .box-link__icon {
-    margin-left: 1em;
   }
 
   /* コメント */
