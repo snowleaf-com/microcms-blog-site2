@@ -18,7 +18,12 @@ type HeaderProps = {
 
 function isActive(pathname: string, href: string) {
   if (href === '/') {
-    return pathname === '/' || pathname.startsWith('/page-') || pathname.startsWith('/blog/') || pathname.startsWith('/tag/');
+    return (
+      pathname === '/' ||
+      pathname.startsWith('/page-') ||
+      pathname.startsWith('/blog/') ||
+      pathname.startsWith('/tag/')
+    );
   }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -38,10 +43,14 @@ function NavLinks({
           <li key={item.href}>
             <a
               href={item.preview ? '#nav-preview' : item.href}
-              class={`site-nav__link${active ? ' is-active' : ''}${item.preview ? ' is-preview' : ''}`}
+              class={`site-nav__link${active ? ' is-active' : ''}${item.preview ? ' is-disabled' : ''}`}
               aria-current={active ? 'page' : undefined}
               {...(item.preview
-                ? { 'aria-disabled': 'true', title: 'プレビュー（未実装）' }
+                ? {
+                    'aria-disabled': 'true',
+                    tabindex: '-1',
+                    title: '準備中'
+                  }
                 : {})}
             >
               {item.label}
@@ -78,7 +87,7 @@ export function Header({ pathname = '/' }: HeaderProps) {
         <button
           type="button"
           class="site-nav__burger"
-          data-nav-open
+          data-nav-toggle
           aria-expanded="false"
           aria-controls="site-nav-drawer"
           aria-label="メニューを開く"
@@ -90,26 +99,14 @@ export function Header({ pathname = '/' }: HeaderProps) {
       <div
         class="site-nav__backdrop"
         data-nav-backdrop
-        hidden
         aria-hidden="true"
       />
       <div
         id="site-nav-drawer"
         class="site-nav__drawer"
         data-nav-drawer
-        hidden
+        aria-hidden="true"
       >
-        <div class="site-nav__drawer-head">
-          <p class="site-nav__drawer-label">メニュー</p>
-          <button
-            type="button"
-            class="site-nav__close"
-            data-nav-close
-            aria-label="メニューを閉じる"
-          >
-            ×
-          </button>
-        </div>
         <nav aria-label="メインメニュー">
           <NavLinks pathname={pathname} className="site-nav__list--drawer" />
         </nav>
