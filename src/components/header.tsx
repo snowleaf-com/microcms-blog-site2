@@ -110,7 +110,6 @@ export function Header({ pathname = '/' }: HeaderProps) {
         <nav aria-label="メインメニュー">
           <NavLinks pathname={pathname} className="site-nav__list--drawer" />
         </nav>
-        <p class="site-nav__hint">ナビ方針のローカルプレビューです</p>
       </div>
     </header>
   );

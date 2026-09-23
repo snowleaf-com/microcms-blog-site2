@@ -1119,13 +1119,6 @@
     padding: 0.55rem 0;
   }
 
-  .site-nav__hint {
-    margin: 2rem 0 0;
-    font-size: 0.75rem;
-    line-height: 1.6;
-    color: var(--color-faint);
-  }
-
   body.is-nav-open {
     overflow: hidden;
   }
