@@ -1,8 +1,63 @@
-export function Header() {
+type NavItem = {
+  label: string;
+  href: string;
+  /** まだルート未実装のプレビュー用 */
+  preview?: boolean;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { label: '飯ログ', href: '/' },
+  { label: '趣味ログ', href: '/hobby', preview: true },
+  { label: '制作物', href: '/works', preview: true },
+  { label: 'About', href: '/about', preview: true }
+];
+
+type HeaderProps = {
+  pathname?: string;
+};
+
+function isActive(pathname: string, href: string) {
+  if (href === '/') {
+    return pathname === '/' || pathname.startsWith('/page-') || pathname.startsWith('/blog/') || pathname.startsWith('/tag/');
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function NavLinks({
+  pathname,
+  className
+}: {
+  pathname: string;
+  className?: string;
+}) {
   return (
-    <header class="bg-(--color-bg) mb-2 max-md:mb-1">
-      <div class="l-main flex justify-center items-center gap-4 pt-3.5 pb-1">
-        <a href="/" class="inline-flex items-center" aria-label="SnowLeaf Home">
+    <ul class={`site-nav__list ${className ?? ''}`.trim()}>
+      {NAV_ITEMS.map((item) => {
+        const active = isActive(pathname, item.href);
+        return (
+          <li key={item.href}>
+            <a
+              href={item.preview ? '#nav-preview' : item.href}
+              class={`site-nav__link${active ? ' is-active' : ''}${item.preview ? ' is-preview' : ''}`}
+              aria-current={active ? 'page' : undefined}
+              {...(item.preview
+                ? { 'aria-disabled': 'true', title: 'プレビュー（未実装）' }
+                : {})}
+            >
+              {item.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+export function Header({ pathname = '/' }: HeaderProps) {
+  return (
+    <header class="site-header bg-(--color-bg) mb-2 max-md:mb-1">
+      <div class="l-main site-header__bar">
+        <a href="/" class="site-header__logo" aria-label="SnowLeaf Home">
           <picture>
             <source srcset="/snowleaf-logo.webp" type="image/webp" />
             <img
@@ -10,11 +65,55 @@ export function Header() {
               alt="SnowLeaf"
               width={300}
               height={84}
-              class="w-auto h-20 max-md:h-16"
+              class="site-header__logo-img"
               decoding="async"
             />
           </picture>
         </a>
+
+        <nav class="site-nav site-nav--desktop" aria-label="メインメニュー">
+          <NavLinks pathname={pathname} />
+        </nav>
+
+        <button
+          type="button"
+          class="site-nav__burger"
+          data-nav-open
+          aria-expanded="false"
+          aria-controls="site-nav-drawer"
+          aria-label="メニューを開く"
+        >
+          <span class="site-nav__burger-lines" aria-hidden="true" />
+        </button>
+      </div>
+
+      <div
+        class="site-nav__backdrop"
+        data-nav-backdrop
+        hidden
+        aria-hidden="true"
+      />
+      <div
+        id="site-nav-drawer"
+        class="site-nav__drawer"
+        data-nav-drawer
+        hidden
+      >
+        <div class="site-nav__drawer-head">
+          <p class="site-nav__drawer-label">メニュー</p>
+          <button
+            type="button"
+            class="site-nav__close"
+            data-nav-close
+            aria-label="メニューを閉じる"
+          >
+            ×
+          </button>
+        </div>
+        <nav aria-label="メインメニュー">
+          <NavLinks pathname={pathname} className="site-nav__list--drawer" />
+        </nav>
+        <p class="site-nav__hint">ナビ方針のローカルプレビューです</p>
       </div>
     </header>
   );
