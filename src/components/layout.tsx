@@ -20,6 +20,7 @@ type LayoutProps = {
   children: Child;
   scripts?: string[];
   preloads?: Preload[];
+  pathname?: string;
 };
 
 export function Layout({
@@ -28,9 +29,10 @@ export function Layout({
   tags,
   children,
   scripts = [],
-  preloads = []
+  preloads = [],
+  pathname = '/'
 }: LayoutProps) {
-  const pageScripts = ['/media.js', ...scripts];
+  const pageScripts = ['/media.js', '/nav.js', ...scripts];
 
   return (
     <>
@@ -76,7 +78,7 @@ export function Layout({
           `}
         </head>
         <body class="font-sans antialiased">
-          <Header />
+          <Header pathname={pathname} />
           {children}
           <Footer tags={tags} />
           {pageScripts.map((src) =>

@@ -87,6 +87,7 @@ app.get('/', pageCache, async (c) => {
 
   return c.html(
     <Layout
+      pathname={c.req.path}
       tags={tags}
       preloads={[
         {
@@ -127,7 +128,9 @@ app.get('/:slug{page-[1-9]\\d*}', pageCache, async (c) => {
   const pages = totalPages(posts.totalCount);
   if (pages === 0 || page > pages) {
     return c.html(
-      <Layout title="404 | SnowLeaf" tags={tags}>
+      <Layout
+      pathname={c.req.path}
+      title="404 | SnowLeaf" tags={tags}>
         <NotFoundPage />
       </Layout>,
       404
@@ -137,7 +140,9 @@ app.get('/:slug{page-[1-9]\\d*}', pageCache, async (c) => {
   const pager = buildHomePager(page, posts.totalCount);
 
   return c.html(
-    <Layout title={`記事一覧 ${page}ページ目 | SnowLeaf`} tags={tags}>
+    <Layout
+      pathname={c.req.path}
+      title={`記事一覧 ${page}ページ目 | SnowLeaf`} tags={tags}>
       <HomePage
         posts={posts.contents}
         hasConfig={hasMicroCmsConfig(env)}
@@ -220,7 +225,9 @@ app.get('/blog/:id', async (c) => {
 
   if (!article) {
     return c.html(
-      <Layout title="404 | SnowLeaf" tags={tags}>
+      <Layout
+      pathname={c.req.path}
+      title="404 | SnowLeaf" tags={tags}>
         <NotFoundPage />
       </Layout>,
       404
@@ -261,6 +268,7 @@ app.get('/blog/:id', async (c) => {
 
   return c.html(
     <Layout
+      pathname={c.req.path}
       title={`${article.title} | SnowLeaf`}
       description={article.excerpt ?? 'SnowLeaf 趣味ブログです。'}
       tags={tags}
@@ -303,7 +311,9 @@ app.get('/tag/:id/:slug{page-[1-9]\\d*}', pageCache, async (c) => {
   const pages = totalPages(posts.totalCount);
   if (pages === 0 || page > pages) {
     return c.html(
-      <Layout title="404 | SnowLeaf" tags={tags}>
+      <Layout
+      pathname={c.req.path}
+      title="404 | SnowLeaf" tags={tags}>
         <NotFoundPage />
       </Layout>,
       404
@@ -314,6 +324,7 @@ app.get('/tag/:id/:slug{page-[1-9]\\d*}', pageCache, async (c) => {
 
   return c.html(
     <Layout
+      pathname={c.req.path}
       title={`${currentTag?.name ?? 'Tag'} ${page}ページ目 | SnowLeaf`}
       tags={tags}
     >
@@ -335,6 +346,7 @@ app.get('/tag/:id', pageCache, async (c) => {
 
   return c.html(
     <Layout
+      pathname={c.req.path}
       title={`${currentTag?.name ?? 'Tag'} | SnowLeaf`}
       tags={tags}
     >
@@ -346,7 +358,9 @@ app.get('/tag/:id', pageCache, async (c) => {
 app.get('/design', async (c) => {
   const tags = await getTags(c.env);
   return c.html(
-    <Layout title="Design System | SnowLeaf" tags={tags}>
+    <Layout
+      pathname={c.req.path}
+      title="Design System | SnowLeaf" tags={tags}>
       <DesignSystemPage />
     </Layout>
   );
@@ -355,7 +369,9 @@ app.get('/design', async (c) => {
 app.notFound(async (c) => {
   const tags = await getTags(c.env);
   return c.html(
-    <Layout title="404 | SnowLeaf" tags={tags}>
+    <Layout
+      pathname={c.req.path}
+      title="404 | SnowLeaf" tags={tags}>
       <NotFoundPage />
     </Layout>,
     404
